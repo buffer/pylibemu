@@ -45,7 +45,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> shellcode += b"\x6a\x10\x53\x57\x66\xb9\x57\x05\xff\xd6\x50\xb4\x0c\x50"
 >>> shellcode += b"\x53\x57\x53\x66\xb9\xc0\x38\xff\xe6"
 >>> emulator = pylibemu.Emulator()
->>> offset = emulator.shellcode_test(shellcode)
+>>> offset = emulator.shellcode_getpc_test(shellcode)
 >>> offset
 4
 >>> emulator.prepare(shellcode, offset)

@@ -56,7 +56,7 @@ cdef class Emulator:
     def new(self):
         self._emu = emu_new()
 
-    def shellcode_test(self, shellcode):
+    def shellcode_getpc_test(self, shellcode):
         cdef char    *buffer
         cdef int32_t  offset = -1
 

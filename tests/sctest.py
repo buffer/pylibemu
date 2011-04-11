@@ -35,7 +35,7 @@ class ShellcodeTest():
 
     def runShellcode(self, shellcode, index):
         self.emulator.new()
-        offset = self.emulator.shellcode_test(shellcode)
+        offset = self.emulator.shellcode_getpc_test(shellcode)
         if offset < 0:
             offset = 0
 
