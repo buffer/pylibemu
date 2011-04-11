@@ -57,6 +57,20 @@ cdef class Emulator:
         self._emu = emu_new()
 
     def shellcode_getpc_test(self, shellcode):
+        '''
+        GetPC code is code that determines its own location in a process address 
+        space.  It is commonly used in code that needs to  reference itself, for 
+        instance in self-decoding and self-modifying code.  This method tries to 
+        identify GetPC within the shellcode. 
+        
+        @type  shellcode: Binary string      
+        @param shellcode: Shellcode
+
+        @rtype:     Integer
+        @return:    If GetPC code is successfully identified the offset from the 
+                    start of the shellcode is returned, otherwise -1.
+        '''
+
         cdef char    *buffer
         cdef int32_t  offset = -1
 
@@ -73,6 +87,17 @@ cdef class Emulator:
         return offset
 
     def prepare(self, shellcode, offset):
+        '''
+        Method used to prepare  the execution environment.  The offset parameter
+        value should be determined by the  shellcode_getpc_test method.  If such
+        method is not able  to identify  the GetPC code  (thus returning -1) the
+        suggested value for offset parameter is 0.
+
+        @type   shellcode: Binary string
+        @param  shellcode: Shellcode
+        @type   offset   : Integer
+        @param  offset   : GetPC offset
+        '''
         cdef c_emu_cpu      *_cpu
         cdef c_emu_memory   *_mem
         cdef char           *scode
@@ -112,6 +137,14 @@ cdef class Emulator:
         emu_cpu_reg32_set(emu_cpu_get(self._emu), esp, 0x0012fe98)
 
     cpdef int test(self, steps = 1000000):
+        '''
+        Method used to test and emulate the shellcode. The method must be always 
+        called after the `prepare' method.
+
+        @type   steps:  Integer
+        @param  steps:  Max number of steps to run
+        '''
+
         cdef c_emu_cpu      *_cpu
         cdef c_emu_memory   *_mem
         cdef c_emu_env      *_env
