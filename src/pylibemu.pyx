@@ -17,6 +17,12 @@
 # MA  02111-1307  USA
 
 cimport pylibemu
+import urllib2
+import hashlib
+import logging
+
+FORMAT = '%(asctime)s %(message)s'
+logging.basicConfig(format = FORMAT, datefmt='[%Y-%m-%d %H:%M:%S]')
 
 # User hooks
 cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
@@ -36,7 +42,18 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     lpfnCB     = <void *>va_arg(args, void_ptr_type)
     va_end(args) 
     
-    print "Download %s -> %s\n" % (szURL, szFileName)
+    logging.warning("Downloading %s (%s)" % (szURL, szFileName))
+    try:
+        url = urllib2.urlopen(szURL, timeout = 10)
+        content = url.read()
+    except:
+        logging.warning("Error while downloading from %s" % (szURL, ))
+        return 0
+
+    m = hashlib.md5(content)
+    with open(str(m.hexdigest()), mode = 'wb') as fd:
+        fd.write(content)
+
     return 0
 
 cdef class Emulator:
@@ -89,7 +106,7 @@ cdef class Emulator:
     def prepare(self, shellcode, offset):
         '''
         Method used to prepare  the execution environment.  The offset parameter
-        value should be determined by the  shellcode_getpc_test method.  If such
+        value should be determined by the `shellcode_getpc_test method'. If such
         method is not able  to identify  the GetPC code  (thus returning -1) the
         suggested value for offset parameter is 0.
 
@@ -184,7 +201,7 @@ cdef class Emulator:
             hook = emu_env_w32_eip_check(_env)
             if hook is not NULL:
                 if hook.hook.win.fnname is NULL:
-                    print "Unhooked call to %s\n" % (hook.hook.win.fnname, )
+                    logging.warning("Unhooked call to %s\n" % (hook.hook.win.fnname, ))
                     break
             else:
                 ret = emu_cpu_parse(emu_cpu_get(self._emu))
@@ -194,7 +211,7 @@ cdef class Emulator:
                     if hook is NULL:
                         ret = emu_cpu_step(emu_cpu_get(self._emu))
                     else:
-                        print "Error"
+                        logging.warning("Error")
 
                 if ret == -1:
                     break
