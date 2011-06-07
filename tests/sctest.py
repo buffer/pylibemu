@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 # MA  02111-1307  USA
 
+import sys, getopt
 from pylibemu import Emulator 
 
 class ShellcodeTest():
@@ -43,6 +44,9 @@ class ShellcodeTest():
         self.emulator.prepare(shellcode, offset)
         self.emulator.test()
         self.emulator.free()
+
+    def testShellcode0(self):
+        self.run()
 
     def testShellcode1(self):
         """
@@ -1557,6 +1561,50 @@ class ShellcodeTest():
 
         self.runShellcode(shellcode, 29)
 
+
+def usage():
+    print """
+Pylibemu test suite
+
+Usage:
+    python sctest.py [ options ]
+
+    Options:
+        -h            , --help                    Display this help information.
+        -s <shellcode>, --shellcode=<shellcode>   Execute the selected shellcode test (0 means 'all tests')
+        -i <shellcode>, --info=<shellcode>        Shows information about the selected shellcode test
+    
+"""
+    sys.exit(0)
+
 if __name__ == '__main__':
-    sctest = ShellcodeTest()
-    sctest.run()
+    args = sys.argv[1:]
+    try:
+        options, args = getopt.getopt(args, 'hs:i:',
+            ['help', 'shellcode=', 'info=', ])
+    except getopt.GetoptError:
+        usage()
+
+    if not options and not args:
+        usage()
+
+    sctest  = ShellcodeTest()
+    execute = False
+    info    = False
+
+    for option in options:
+        if option[0] == '-h' or option[0] == '--help':
+            usage()
+        if option[0] == '-s' or option[0] == '--shellcode':
+            f = getattr(sctest, "testShellcode%i" % (int(option[1]), ), None)
+            execute = True
+        if option[0] == '-i' or option[0] == '--info':
+            if int(option[1]) == 0:
+                usage()
+            f = getattr(sctest, "testShellcode%i" % (int(option[1]), ), None)
+            info = True
+
+    if info:
+        print f.__doc__
+    if execute:
+        f()
