@@ -94,7 +94,7 @@ int recv (
 False
 
 
-The Emulator accepts an optional parameter (output_size) which defines how many
+The Emulator accepts an optional parameter (output_size) which defines how much
 memory will be reserved for storing the emulation profile dump. By default, its
 size is 1MB but it be can changed in two possible ways
 
@@ -107,11 +107,11 @@ size is 1MB but it be can changed in two possible ways
 
 If the memory reserved is not enough to contain the entire dump, the dump will be 
 truncated and the Emulator attribute emu_profile_truncated will be set to True.
-This approach is needed for some shellcodes which may produce several MBs dumps in
-order not to penalize performances. If the entire dump is needed a really simple
-approach could be to check the emu_profile_truncated after the test, increase the
-memory reserved for he dump through the set_output_size method and then retrying
-the shellcode emulation as shown above.
+This approach is needed in order not to penalize performances while analyzing 
+some shellcodes which may produce several MBs dumps. If the entire dump is needed 
+a really simple approach could be to check the emu_profile_truncated after the 
+test, increase the reserved memory through the Emulator set_output_size method 
+and subsequently run the shellcode emulation again as shown above.
 
 
 License information
