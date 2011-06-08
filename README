@@ -94,24 +94,22 @@ int recv (
 False
 
 
-The Emulator accepts an optional parameter (output_size) which defines how much
-memory will be reserved for storing the emulation profile dump. By default, its
-size is 1MB but it be can changed in two possible ways
-
+The Emulator accepts the optional parameter `output_size' which defines how much memory 
+will be reserved for storing the emulation profile dump. By default, its size is 1MB but 
+it be can changed in two possible ways
 
 >>> emulator = pylibemu.Emulator(1024)
 
 >>> emulator = pylibemu.Emulator()
 >>> emulator.set_output_size(1024)
 
-
-If the memory reserved is not enough to contain the entire dump, the dump will be 
-truncated and the Emulator attribute emu_profile_truncated will be set to True.
-This approach is needed in order not to penalize performances while analyzing 
-some shellcodes which may produce several MBs dumps. If the entire dump is needed 
-a really simple approach could be to check the emu_profile_truncated after the 
-test, increase the reserved memory through the Emulator set_output_size method 
-and subsequently run the shellcode emulation again as shown above.
+If the reserved memory is not enough to contain the entire dump, the dump will be truncated 
+and the Emulator attribute `emu_profile_truncated' will be set to True. This approach is 
+needed in order not to penalize performances while analyzing some shellcodes which may produce 
+several MBs dumps (such as the Metasploit windows/download_exec). If the entire dump is needed 
+a really simple approach could be to check the `emu_profile_truncated' attribute after the 
+shellcode emulation test, increase the reserved memory through the Emulator `set_output_size' 
+method and subsequently run the shellcode emulation test again as shown above.
 
 
 License information
