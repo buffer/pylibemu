@@ -315,6 +315,7 @@ cdef class Emulator:
 
     def new(self):
         self._emu = emu_new()
+        self.emu_profile = EmuProfile(self.output_size)
 
     def set_output_size(self, output_size):
         self.free()
@@ -464,7 +465,6 @@ cdef class Emulator:
                 if ret == -1:
                     break
 
-        self.emu_profile = EmuProfile(self.output_size)
         self.emu_profile.emu_profile_debug(_env)
         return 0
 

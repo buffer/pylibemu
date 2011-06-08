@@ -27,7 +27,7 @@ from pylibemu import Emulator
 class ShellcodeTest():
     def __init__(self):
         self.log = logging.getLogger("ShellcodeTest")
-        self.log.setLevel(logging.INFO)
+        self.log.setLevel(logging.DEBUG)
         self.emulator = Emulator()
 
     def run(self):
@@ -52,7 +52,7 @@ class ShellcodeTest():
         
         self.log.info(self.emulator.emu_profile_output)
         if self.emulator.emu_profile_truncated:
-            self.log.warning("Emulation profile truncated")
+            self.log.warning("[WARNING] Emulation profile truncated")
         
         self.emulator.free()
 
