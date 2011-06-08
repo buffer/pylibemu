@@ -1,3 +1,4 @@
+#
 # pylibemu.pyx
 #
 # Copyright(c) 2011 Angelo Dell'Aera <buffer@antifork.org>
@@ -17,12 +18,17 @@
 # MA  02111-1307  USA
 
 cimport pylibemu
+
+import sys
+import socket
+import struct
 import urllib2
 import hashlib
 import logging
 
 FORMAT = '%(asctime)s %(message)s'
 logging.basicConfig(format = FORMAT, datefmt='[%Y-%m-%d %H:%M:%S]')
+
 
 # User hooks
 cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
@@ -48,7 +54,7 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
         content = url.read()
     except:
         logging.warning("Error while downloading from %s" % (szURL, ))
-        return 0
+        return 0x800C0008 # INET_E_DOWNLOAD_FAILURE
 
     m = hashlib.md5(content)
     with open(str(m.hexdigest()), mode = 'wb') as fd:
@@ -56,10 +62,247 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
 
     return 0
 
-cdef class Emulator:
-    cdef c_emu *_emu
 
-    def __cinit__(self):
+DEF OUTPUT_SIZE = 1024 * 1024 # 1MB
+DEF SEP_SIZE    = 16
+
+cdef class EmuProfile:
+    cdef char *sep[SEP_SIZE]
+    cdef char *output 
+    cdef char *t
+    cdef char *s
+    cdef bint truncate
+    cdef int  output_size
+
+    def __cinit__(self, size_t output_size):
+        self.truncate    = False
+        self.output_size = output_size
+
+        self.output = <char *>malloc(output_size)
+        self.s      = <char *>malloc(4096)
+
+        self.check_memalloc()
+        memset(self.output, 0, sizeof(self.output))
+        memset(self.s     , 0, sizeof(self.s))
+        self.build_sep()
+
+    cdef check_memalloc(self):
+        if self.output is NULL or self.s is NULL:
+            logging.warning("Memory allocation error")
+            sys._exit(-1)
+
+    cdef strcat(self, char *dst, char *src, int n):
+        if self.truncate:
+            return
+        
+        if len(dst) + len(src) > n:
+            self.truncate = True
+            return
+            
+        strcat(dst, src)
+
+    cdef build_sep(self):
+        cdef int i, index
+        
+        for i in range(SEP_SIZE):
+            counter = i
+            t = <char *>malloc(64)
+
+            if t is NULL:
+                logging.warning("Memory allocation error")
+                sys._exit(-1)
+            
+            memset(t, 0, sizeof(t))
+
+            while counter:
+                self.strcat(t, '    ', 64)
+                counter -= 1
+
+            self.sep[i] = t
+       
+    cdef log_function_header(self, c_emu_profile_function *function):
+        sprintf(self.s, "%s %s (\n", function.return_value.argtype, function.fnname)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef log_bracket_closed(self):
+        cdef char *s = ")"
+
+        self.strcat(self.output, s, self.output_size)
+
+    cdef log_array_start(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s %s %s = [ \n", self.sep[indent], argument.argtype, argument.argname)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef log_array_end(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s ];\n", self.sep[indent])
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef log_struct_start(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s struct %s %s = {\n", self.sep[indent], argument.argtype, argument.argname)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef log_struct_end(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s };\n", self.sep[indent])
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_argument_render_int(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s %s %s = %i;\n", self.sep[indent], argument.argtype, argument.argname, argument.value.tint)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_argument_render_string(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s %s %s = \"%s\";\n", self.sep[indent], argument.argtype, argument.argname, argument.value.tchar)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_argument_render_bytea(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s %s %s = \".binary.\" (%i bytes);\n", self.sep[indent], argument.argtype, argument.argname, argument.value.bytea.size)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_argument_render_ptr(self, c_emu_profile_argument *argument, int is_struct, int indent):
+        if is_struct:
+            sprintf(self.s, "%s struct %s %s = 0x%08x => \n", self.sep[indent], argument.argtype, argument.argname, argument.value.tptr.addr)
+        else:
+            sprintf(self.s, "%s %s = 0x%08x => \n", self.sep[indent], argument.argtype, argument.argname, argument.value.tptr.addr)
+        
+        self.strcat(self.output, self.s, self.output_size)        
+ 
+    cdef emu_profile_argument_render_ip(self, c_emu_profile_argument *argument, int indent):
+        cdef c_in_addr *addr
+        cdef char      *host
+
+        addr = <c_in_addr *>&argument.value.tint
+        host = inet_ntoa(addr[0])
+        sprintf(self.s, "%s %s %s = %i (host=%s);\n", self.sep[indent], argument.argtype, argument.argname, argument.value.tint, host)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_argument_render_port(self, c_emu_profile_argument *argument, int indent):
+        port = ntohs(<uint16_t>argument.value.tint)
+        sprintf(self.s, "%s %s %s = %i (port=%i);\n", self.sep[indent], argument.argtype, argument.argname, argument.value.tint, port)
+        self.strcat(self.output, self.s, self.output_size)        
+
+    cdef emu_profile_argument_render_none(self, c_emu_profile_argument *argument, int indent):
+        sprintf(self.s, "%s none;\n", self.sep[indent])
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_function_render_none(self):
+        return
+
+    cdef emu_profile_function_render_int(self, int value):
+        sprintf(self.s, " =  %i;\n", value)
+        self.strcat(self.output, self.s, self.output_size)
+
+    cdef emu_profile_function_render_ptr(self, void* ptr):
+        n = sprintf(self.s, " = 0x%08x;\n", ptr)
+        self.strcat(self.output, self.s, self.output_size)
+        
+    cdef emu_profile_argument_debug(self, c_emu_profile_argument *argument, int indent):
+        cdef c_emu_profile_argument *argit
+        cdef c_emu_profile_argument *argumentit
+        cdef int                    is_struct
+
+        if argument.render == render_struct:
+            self.log_struct_start(argument, indent)
+
+            argumentit = emu_profile_arguments_first(argument.value.tstruct.arguments)
+            
+            while not emu_profile_arguments_istail(argumentit):
+                self.emu_profile_argument_debug(argumentit, indent + 1)
+                argumentit = emu_profile_arguments_next(argumentit)
+
+            self.log_struct_end(argument, indent)
+            return
+
+        if argument.render == render_array:
+            self.log_array_start(argument, indent)
+            
+            argumentit = emu_profile_arguments_first(argument.value.tstruct.arguments)
+            while not emu_profile_arguments_istail(argumentit):
+                self.emu_profile_argument_debug(argumentit, indent + 1)
+                argumentit = emu_profile_arguments_next(argumentit)
+
+            self.log_array_end(argument, indent)
+            return
+
+        if argument.render == render_int:
+            self.emu_profile_argument_render_int(argument, indent)
+            return
+
+        if argument.render == render_short:
+            self.emu_profile_argument_render_int(argument, indent)
+            return
+
+        if argument.render == render_string:
+            self.emu_profile_argument_render_string(argument, indent)
+            return
+
+        if argument.render == render_bytea:
+            self.emu_profile_argument_render_bytea(argument, indent)
+            return
+
+        if argument.render == render_ptr:
+            argit = argument
+
+            while argit.render == render_ptr:
+                argit = argit.value.tptr.ptr
+
+            is_struct = 0
+            if argit.render == render_struct:
+                is_struct = 1
+
+            self.emu_profile_argument_render_ptr(argument, is_struct, indent)
+            self.emu_profile_argument_debug(argument.value.tptr.ptr, indent + 1)
+            return
+
+        if argument.render == render_ip:
+            self.emu_profile_argument_render_ip(argument, indent)
+            return
+
+        if argument.render == render_port:
+            self.emu_profile_argument_render_port(argument, indent)
+            return
+
+        if argument.render == render_none:
+            self.emu_profile_argument_render_none(argument, indent)
+            return
+
+    cdef emu_profile_function_debug(self, c_emu_profile_function *function):
+        self.log_function_header(function)
+        
+        argument = emu_profile_arguments_first(function.arguments)
+        while not emu_profile_arguments_istail(argument):
+            self.emu_profile_argument_debug(argument, 1)
+            argument = emu_profile_arguments_next(argument)
+
+        self.log_bracket_closed()
+        
+        render = function.return_value.render
+
+        if render == render_none:
+            self.emu_profile_function_render_none()
+
+        if render == render_int:
+            value = function.return_value.value.tint
+            self.emu_profile_function_render_int(value)
+
+        if render == render_ptr:
+            ptr = function.return_value.value.tptr.addr
+            self.emu_profile_function_render_int(ptr)
+
+        self.emu_profile_function_render_none()
+
+    cdef emu_profile_debug(self, c_emu_env *_env):
+        function = emu_profile_functions_first(_env.profile.functions)
+
+        while not emu_profile_functions_istail(function):
+            self.emu_profile_function_debug(function)
+            function = emu_profile_functions_next(function)
+
+cdef class Emulator:
+    cdef c_emu      *_emu
+    cdef size_t     output_size
+    cdef EmuProfile emu_profile
+
+    def __cinit__(self, output_size = OUTPUT_SIZE):
+        self.output_size = output_size
         self.new()
 
     def __dealloc__(self):
@@ -72,6 +315,11 @@ cdef class Emulator:
 
     def new(self):
         self._emu = emu_new()
+
+    def set_output_size(self, output_size):
+        self.free()
+        self.output_size = output_size
+        self.new()
 
     def shellcode_getpc_test(self, shellcode):
         '''
@@ -216,7 +464,20 @@ cdef class Emulator:
                 if ret == -1:
                     break
 
-        emu_profile_debug(_env.profile)
+        self.emu_profile = EmuProfile(self.output_size)
+        self.emu_profile.emu_profile_debug(_env)
         return 0
+
+    @property
+    def emu_profile_output(self):
+        return self.emu_profile.output
+
+    @property
+    def emu_profile_truncated(self):
+        return self.emu_profile.truncate
+
+        
+
+
 
 

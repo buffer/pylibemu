@@ -18,11 +18,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 # MA  02111-1307  USA
 
-import sys, getopt
+import sys
+import getopt
+import logging
+
 from pylibemu import Emulator 
 
 class ShellcodeTest():
     def __init__(self):
+        self.log = logging.getLogger("ShellcodeTest")
+        self.log.setLevel(logging.INFO)
         self.emulator = Emulator()
 
     def run(self):
@@ -40,9 +45,15 @@ class ShellcodeTest():
         if offset < 0:
             offset = 0
 
-        print "Offset: %d" % (offset, )
+        self.log.debug("Offset: %d" % (offset, ))
+
         self.emulator.prepare(shellcode, offset)
         self.emulator.test()
+        
+        self.log.info(self.emulator.emu_profile_output)
+        if self.emulator.emu_profile_truncated:
+            self.log.warning("Emulation profile truncated")
+        
         self.emulator.free()
 
     def testShellcode0(self):

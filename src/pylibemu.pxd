@@ -17,7 +17,7 @@
 # MA  02111-1307  USA
 
 
-from libc.stdint cimport int32_t, uint8_t, uint16_t, uint32_t
+from libc.stdint cimport int16_t, int32_t, uint8_t, uint16_t, uint32_t
 cimport cpython
 
 
@@ -39,6 +39,27 @@ cdef extern from "stdarg.h":
     fake_type char_ptr_type "char *"
     fake_type int_type "int"
 
+cdef extern from "stdio.h":
+    int sprintf(char *, char *,...)
+
+cdef extern from "stdlib.h":
+    void free(void* )
+    void *malloc(size_t)
+    void *calloc(size_t, size_t)
+    void *realloc(void* , size_t)
+
+cdef extern from "string.h":
+    char* strcat(char *, char *)
+    void *memset(void *, int , size_t)
+
+cdef extern from "netinet/in.h":
+    ctypedef struct c_in_addr "struct in_addr":
+        pass
+    
+cdef extern from "arpa/inet.h":
+    uint16_t ntohs(uint16_t)
+    char     *inet_ntoa(c_in_addr)
+
 cdef extern from "emu/emu_memory.h":
     ctypedef struct c_emu_memory "struct emu_memory":
         pass
@@ -50,12 +71,77 @@ cdef extern from "emu/emu_memory.h":
 
 
 cdef extern from "emu/environment/emu_profile.h":
-    ctypedef struct c_emu_profile "struct emu_profile":
+    cdef enum emu_profile_argument_render:
+        render_none
+        render_ptr
+        render_int
+        render_short
+        render_struct
+        render_string
+        render_bytea
+        render_ip
+        render_port
+        render_array
+
+    ctypedef enum c_emu_profile_argument_render "enum emu_profile_argument_render":
         pass
 
-    c_emu_profile   *emu_profile_new()
-    void             emu_profile_free(c_emu_profile *profile)
-    void             emu_profile_debug(c_emu_profile *profile)
+    ctypedef struct c_emu_profile_argument "struct emu_profile_argument"
+
+    ctypedef struct c_emu_profile_argument_root "struct emu_profile_argument_root":
+        pass
+
+    ctypedef struct c_bytea:
+        unsigned char                       *data
+        uint32_t                            size
+
+    ctypedef struct c_tstruct:
+        c_emu_profile_argument_root         *arguments
+    
+    ctypedef struct c_tptr:
+        c_emu_profile_argument              *ptr
+        uint32_t                            addr
+
+    ctypedef union c_emu_profile_argument_value:
+        int32_t                             tint
+        int16_t                             tshort
+        char                                *tchar
+        c_bytea                             bytea
+        c_tstruct                           tstruct
+        c_tptr                              tptr
+
+    ctypedef struct c_emu_profile_argument "struct emu_profile_argument":
+        emu_profile_argument_render         render
+        c_emu_profile_argument_value        value                               
+        char                                *argname
+        char                                *argtype
+
+    ctypedef struct c_emu_profile_function "struct emu_profile_function":
+        emu_profile_argument_render         retval
+        char                                *fnname
+        c_emu_profile_argument_root         *arguments
+        c_emu_profile_argument              *return_value
+
+    ctypedef struct c_emu_profile_function_root "struct emu_profile_function_root":
+        pass
+
+    ctypedef struct c_emu_profile_function "struct emu_profile_function":
+        pass
+
+    ctypedef struct c_emu_profile "struct emu_profile":
+        c_emu_profile_function_root *functions
+
+    c_emu_profile           *emu_profile_new()
+    void                     emu_profile_free(c_emu_profile *profile)
+    void                     emu_profile_debug(c_emu_profile *profile)
+    c_emu_profile_argument  *emu_profile_arguments_first(c_emu_profile_argument_root *root)
+    c_emu_profile_argument  *emu_profile_arguments_next(c_emu_profile_argument *argument)
+    bint                     emu_profile_arguments_istail(c_emu_profile_argument *argument)
+    void                     emu_profile_argument_debug(c_emu_profile_argument *argument, int indent)
+    c_emu_profile_function  *emu_profile_functions_first(c_emu_profile_function_root *root)
+    c_emu_profile_function  *emu_profile_functions_next(c_emu_profile_function *function)
+    bint                     emu_profile_functions_istail(c_emu_profile_function *function)
+    void                     emu_profile_function_debug(c_emu_profile_function *function)
 
 
 cdef extern from "emu/emu.h":

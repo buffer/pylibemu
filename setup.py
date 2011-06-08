@@ -2,10 +2,12 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
+sourcefiles  = ['src/pylibemu.c']
+
 setup(
     name         = "pylibemu",
     packages     = [],
-    version      = "0.1",
+    version      = "0.1.1",
     description  = "Libemu Python wrapper",
     url          = "",
     author       = "Angelo Dell'Aera",
@@ -22,9 +24,9 @@ setup(
         ],
     cmdclass     = { 'build_ext' : build_ext },
     ext_modules  = [Extension("pylibemu", 
-                            ["src/pylibemu.c"],
-                            include_dirs = ["/opt/libemu/include"],
-                            library_dirs = ["/opt/libemu/lib"], 
-                            libraries    = ["emu"]
-                            )]
+                              sourcefiles,
+                              include_dirs = ["/opt/libemu/include"],
+                              library_dirs = ["/opt/libemu/lib"], 
+                              libraries    = ["emu"]
+                              )]
 )

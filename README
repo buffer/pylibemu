@@ -26,6 +26,7 @@ $ sudo python setup.py install
 Usage
 =====
 
+
 buffer@alnitak ~ $ python
 Python 2.6.6 (r266:84292, Feb 26 2011, 12:20:05) 
 [GCC 4.4.4] on linux2
@@ -50,6 +51,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 4
 >>> emulator.prepare(shellcode, offset)
 >>> emulator.test()
+0
+>>> print emulator.emu_profile_output
 HMODULE LoadLibraryA (
      LPCTSTR lpFileName = 0x0012fe90 => 
            = "ws2_32";
@@ -86,8 +89,29 @@ int recv (
      int len = 3072;
      int flags = 0;
 ) =  3072;
-0
->>>
+
+>>> emulator.emu_profile_truncated
+False
+
+
+The Emulator accepts an optional parameter (output_size) which defines how many
+memory will be reserved for storing the emulation profile dump. By default, its
+size is 1MB but it be can changed in two possible ways
+
+
+>>> emulator = pylibemu.Emulator(1024)
+
+>>> emulator = pylibemu.Emulator()
+>>> emulator.set_output_size(1024)
+
+
+If the memory reserved is not enough to contain the entire dump, the dump will be 
+truncated and the Emulator attribute emu_profile_truncated will be set to True.
+This approach is needed for some shellcodes which may produce several MBs dumps in
+order not to penalize performances. If the entire dump is needed a really simple
+approach could be to check the emu_profile_truncated after the test, increase the
+memory reserved for he dump through the set_output_size method and then retrying
+the shellcode emulation as shown above.
 
 
 License information
