@@ -40,16 +40,14 @@ cdef extern from "stdarg.h":
     fake_type int_type "int"
 
 cdef extern from "stdio.h":
-    int sprintf(char *, char *,...)
+    int snprintf(char *, size_t, char *, ...)
 
 cdef extern from "stdlib.h":
     void free(void* )
     void *malloc(size_t)
-    void *calloc(size_t, size_t)
-    void *realloc(void* , size_t)
 
 cdef extern from "string.h":
-    char* strcat(char *, char *)
+    char *strncat(char *, char *, size_t)
     void *memset(void *, int , size_t)
 
 cdef extern from "netinet/in.h":
@@ -131,15 +129,15 @@ cdef extern from "emu/environment/emu_profile.h":
     ctypedef struct c_emu_profile "struct emu_profile":
         c_emu_profile_function_root *functions
 
-    c_emu_profile           *emu_profile_new()
+    c_emu_profile            *emu_profile_new()
     void                     emu_profile_free(c_emu_profile *profile)
     void                     emu_profile_debug(c_emu_profile *profile)
-    c_emu_profile_argument  *emu_profile_arguments_first(c_emu_profile_argument_root *root)
-    c_emu_profile_argument  *emu_profile_arguments_next(c_emu_profile_argument *argument)
+    c_emu_profile_argument   *emu_profile_arguments_first(c_emu_profile_argument_root *root)
+    c_emu_profile_argument   *emu_profile_arguments_next(c_emu_profile_argument *argument)
     bint                     emu_profile_arguments_istail(c_emu_profile_argument *argument)
     void                     emu_profile_argument_debug(c_emu_profile_argument *argument, int indent)
-    c_emu_profile_function  *emu_profile_functions_first(c_emu_profile_function_root *root)
-    c_emu_profile_function  *emu_profile_functions_next(c_emu_profile_function *function)
+    c_emu_profile_function   *emu_profile_functions_first(c_emu_profile_function_root *root)
+    c_emu_profile_function   *emu_profile_functions_next(c_emu_profile_function *function)
     bint                     emu_profile_functions_istail(c_emu_profile_function *function)
     void                     emu_profile_function_debug(c_emu_profile_function *function)
 
@@ -184,11 +182,11 @@ cdef extern from "emu/emu.h":
         pass
 
     c_emu           *emu_new()
-    void             emu_free(c_emu *e) 
+    void            emu_free(c_emu *e) 
     c_emu_memory    *emu_memory_get(c_emu *e) 
     c_emu_logging   *emu_logging_get(c_emu *e) 
     c_emu_cpu       *emu_cpu_get(c_emu *e) 
-    int              emu_errno(c_emu *c) 
+    int             emu_errno(c_emu *c) 
     char            *emu_strerror(c_emu *e)
 
 
@@ -203,12 +201,12 @@ cdef extern from "emu/emu_cpu.h":
         esi = 6 
         edi = 7
     
-    void emu_cpu_reg32_set(c_emu_cpu *cpu_p, c_emu_reg32 reg, uint32_t val)
-    void emu_cpu_eflags_set(c_emu_cpu *c, uint32_t val)
-    void emu_cpu_eip_set(c_emu_cpu *c, uint32_t eip)
+    void     emu_cpu_reg32_set(c_emu_cpu *cpu_p, c_emu_reg32 reg, uint32_t val)
+    void     emu_cpu_eflags_set(c_emu_cpu *c, uint32_t val)
+    void     emu_cpu_eip_set(c_emu_cpu *c, uint32_t eip)
     uint32_t emu_cpu_eip_get(c_emu_cpu *c)
-    int32_t emu_cpu_parse(c_emu_cpu *c)
-    int32_t emu_cpu_step(c_emu_cpu *c)
+    int32_t  emu_cpu_parse(c_emu_cpu *c)
+    int32_t  emu_cpu_step(c_emu_cpu *c)
 
 
 cdef extern from "emu/environment/linux/emu_env_linux.h":
@@ -218,7 +216,6 @@ cdef extern from "emu/environment/linux/emu_env_linux.h":
     ctypedef struct c_emu_env_linux_syscall "struct emu_env_linux_syscall":
         pass
 
-
 cdef extern from "emu/environment/win32/emu_env_w32.h":
     ctypedef struct c_emu_env_w32 "struct emu_env_w32":
         pass
@@ -227,9 +224,7 @@ cdef extern from "emu/environment/win32/emu_env_w32_dll_export.h":
     ctypedef struct c_emu_env_w32_dll_export "struct emu_env_w32_dll_export":
         char        *fnname
         uint32_t    virtualaddr
-        #int32_t     (*fnhook)(c_emu_env *env, c_emu_env_hook *hook)
         void        *userdata
-        #uint32_t    (*userhook)(c_emu_env *env, c_emu_env_hook *hook, ...)
 
 cdef extern from "emu/environment/emu_env.h":
     ctypedef struct c_env:
@@ -254,8 +249,8 @@ cdef extern from "emu/environment/emu_env.h":
         c_emu_env_type  type
         c_hook          hook
 
-    c_emu_env       *emu_env_new(c_emu *e)
-    void             emu_env_free(c_emu_env *env)
+    c_emu_env *emu_env_new(c_emu *e)
+    void      emu_env_free(c_emu_env *env)
 
 
 cdef extern from "emu/environment/linux/emu_env_linux.h":
@@ -264,11 +259,11 @@ cdef extern from "emu/environment/linux/emu_env_linux.h":
 
 cdef extern from "emu/environment/win32/emu_env_w32.h":
     int32_t         emu_env_w32_load_dll(c_emu_env_w32 *env, char *path)
-    c_emu_env_hook *emu_env_w32_eip_check(c_emu_env *env)
-    int32_t         emu_env_w32_export_hook(c_emu_env       *env,
-                                            char  *exportname,
-                                            uint32_t        (*fnhook)(c_emu_env *env, c_emu_env_hook *hook, ...),
-                                            void            *userdata)
+    c_emu_env_hook  *emu_env_w32_eip_check(c_emu_env *env)
+    int32_t         emu_env_w32_export_hook(c_emu_env   *env,
+                                            char        *exportname,
+                                            uint32_t    (*fnhook)(c_emu_env *env, c_emu_env_hook *hook, ...),
+                                            void        *userdata)
 
 
 
