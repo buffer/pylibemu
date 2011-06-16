@@ -1,6 +1,6 @@
 from distutils.core import setup
 from distutils.extension import Extension
-from Cython.Distutils import build_ext
+#from Cython.Distutils import build_ext
 
 sourcefiles  = ['src/pylibemu.c']
 
@@ -22,7 +22,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Security",
         ],
-    cmdclass     = { 'build_ext' : build_ext },
+    #cmdclass     = { 'build_ext' : build_ext },
     ext_modules  = [Extension("pylibemu", 
                               sourcefiles,
                               include_dirs = ["/opt/libemu/include"],
