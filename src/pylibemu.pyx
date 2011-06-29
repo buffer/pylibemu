@@ -119,7 +119,7 @@ cdef class EmuProfile:
             memset(t, 0, sizeof(t))
 
             while counter:
-                self.strncat(t, ssep, max_len)
+                self.concatenate(t, ssep, max_len)
                 counter -= 1
 
             self.sep[i] = t
@@ -131,12 +131,12 @@ cdef class EmuProfile:
                  function.return_value.argtype, 
                  function.fnname)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_bracket_closed(self):
         cdef char *s = ")"
 
-        self.strncat(self.output, s, self.output_size)
+        self.concatenate(self.output, s, self.output_size)
 
     cdef log_array_start(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -146,7 +146,7 @@ cdef class EmuProfile:
                  argument.argtype, 
                  argument.argname)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_array_end(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -154,7 +154,7 @@ cdef class EmuProfile:
                  "%s ];\n", 
                  self.sep[indent])
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_struct_start(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -164,7 +164,7 @@ cdef class EmuProfile:
                  argument.argtype, 
                  argument.argname)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_struct_end(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -172,7 +172,7 @@ cdef class EmuProfile:
                  "%s };\n", 
                  self.sep[indent])
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_int(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -183,7 +183,7 @@ cdef class EmuProfile:
                  argument.argname, 
                  argument.value.tint)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_string(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -194,7 +194,7 @@ cdef class EmuProfile:
                  argument.argname, 
                  argument.value.tchar)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_bytea(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -205,7 +205,7 @@ cdef class EmuProfile:
                  argument.argname, 
                  argument.value.bytea.size)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_ptr(self, c_emu_profile_argument *argument, int is_struct, int indent):
         if is_struct:
@@ -224,9 +224,9 @@ cdef class EmuProfile:
                      argument.argtype, 
                      argument.argname, 
                      argument.value.tptr.addr)
-        
-        self.strncat(self.output, self.s, self.output_size)        
- 
+
+        self.concatenate(self.output, self.s, self.output_size)
+
     cdef emu_profile_argument_render_ip(self, c_emu_profile_argument *argument, int indent):
         cdef c_in_addr *addr
         cdef char      *host
@@ -243,7 +243,7 @@ cdef class EmuProfile:
                  argument.value.tint, 
                  host)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_port(self, c_emu_profile_argument *argument, int indent):
         cdef uint16_t port
@@ -259,7 +259,7 @@ cdef class EmuProfile:
                  argument.value.tint, 
                  port)
 
-        self.strncat(self.output, self.s, self.output_size)        
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_none(self, c_emu_profile_argument *argument, int indent):
         snprintf(self.s, 
@@ -267,7 +267,7 @@ cdef class EmuProfile:
                  "%s none;\n", 
                  self.sep[indent])
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_function_render_none(self):
         return
@@ -278,7 +278,7 @@ cdef class EmuProfile:
                  " =  %i;\n", 
                  value)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_function_render_ptr(self, void* ptr):
         snprintf(self.s, 
@@ -286,8 +286,8 @@ cdef class EmuProfile:
                  " = 0x%08x;\n", 
                  ptr)
 
-        self.strncat(self.output, self.s, self.output_size)
-        
+        self.concatenate(self.output, self.s, self.output_size)
+
     cdef emu_profile_argument_debug(self, c_emu_profile_argument *argument, int indent):
         cdef c_emu_profile_argument *argit
         cdef c_emu_profile_argument *argumentit
