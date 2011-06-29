@@ -43,8 +43,8 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     szFileName = <char *>va_arg(args, char_ptr_type)
     dwReserved = <int>va_arg(args, int_type)
     lpfnCB     = <void *>va_arg(args, void_ptr_type)
-    va_end(args) 
-    
+    va_end(args)
+
     logging.warning("Downloading %s (%s)" % (szURL, szFileName))
     try:
         url = urllib2.urlopen(szURL, timeout = 10)
@@ -67,7 +67,7 @@ DEF S_SIZE      = 4096
 
 cdef class EmuProfile:
     cdef char *sep[SEP_SIZE]
-    cdef char *output 
+    cdef char *output
     cdef char *t
     cdef char *s
     cdef bint truncate
@@ -90,24 +90,24 @@ cdef class EmuProfile:
             logging.warning("Memory allocation error")
             sys._exit(-1)
 
-    cdef strncat(self, char *dst, char *src, int n):
+    cdef concatenate(self, char *dst, char *src, int n):
         if self.truncate:
             return
-        
+
         if len(dst) + len(src) > n - 1:
             self.truncate = True
             return
-            
+
         strncat(dst, src, n)
 
     cdef build_sep(self):
         cdef char *ssep = '    '
         cdef int  counter
         cdef int  i
-        cdef int  max_len 
+        cdef int  max_len
 
         max_len = len(ssep) * SEP_SIZE + 1
-        
+
         for i in range(SEP_SIZE):
             counter = i
             t = <char *>malloc(max_len)
@@ -115,118 +115,118 @@ cdef class EmuProfile:
             if t is NULL:
                 logging.warning("Memory allocation error")
                 sys._exit(-1)
-            
+
             memset(t, 0, sizeof(t))
 
             while counter:
-                self.strncat(t, ssep, max_len)
+                self.concatenate(t, ssep, max_len)
                 counter -= 1
 
             self.sep[i] = t
-       
+
     cdef log_function_header(self, c_emu_profile_function *function):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s (\n", 
-                 function.return_value.argtype, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s (\n",
+                 function.return_value.argtype,
                  function.fnname)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_bracket_closed(self):
         cdef char *s = ")"
 
-        self.strncat(self.output, s, self.output_size)
+        self.concatenate(self.output, s, self.output_size)
 
     cdef log_array_start(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s %s = [ \n", 
-                 self.sep[indent], 
-                 argument.argtype, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s %s = [ \n",
+                 self.sep[indent],
+                 argument.argtype,
                  argument.argname)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_array_end(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s ];\n", 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s ];\n",
                  self.sep[indent])
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_struct_start(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s struct %s %s = {\n", 
-                 self.sep[indent], 
-                 argument.argtype, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s struct %s %s = {\n",
+                 self.sep[indent],
+                 argument.argtype,
                  argument.argname)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef log_struct_end(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s };\n", 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s };\n",
                  self.sep[indent])
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_int(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s %s = %i;\n", 
-                 self.sep[indent], 
-                 argument.argtype, 
-                 argument.argname, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s %s = %i;\n",
+                 self.sep[indent],
+                 argument.argtype,
+                 argument.argname,
                  argument.value.tint)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_string(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s %s = \"%s\";\n", 
-                 self.sep[indent], 
-                 argument.argtype, 
-                 argument.argname, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s %s = \"%s\";\n",
+                 self.sep[indent],
+                 argument.argtype,
+                 argument.argname,
                  argument.value.tchar)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_bytea(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s %s = \".binary.\" (%i bytes);\n", 
-                 self.sep[indent], 
-                 argument.argtype, 
-                 argument.argname, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s %s = \".binary.\" (%i bytes);\n",
+                 self.sep[indent],
+                 argument.argtype,
+                 argument.argname,
                  argument.value.bytea.size)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_ptr(self, c_emu_profile_argument *argument, int is_struct, int indent):
         if is_struct:
-            snprintf(self.s, 
-                     S_SIZE, 
-                     "%s struct %s %s = 0x%08x => \n", 
-                     self.sep[indent], 
-                     argument.argtype, 
-                     argument.argname, 
+            snprintf(self.s,
+                     S_SIZE,
+                     "%s struct %s %s = 0x%08x => \n",
+                     self.sep[indent],
+                     argument.argtype,
+                     argument.argname,
                      argument.value.tptr.addr)
         else:
-            snprintf(self.s, 
-                     S_SIZE, 
-                     "%s %s = 0x%08x => \n", 
-                     self.sep[indent], 
-                     argument.argtype, 
-                     argument.argname, 
+            snprintf(self.s,
+                     S_SIZE,
+                     "%s %s = 0x%08x => \n",
+                     self.sep[indent],
+                     argument.argtype,
+                     argument.argname,
                      argument.value.tptr.addr)
-        
-        self.strncat(self.output, self.s, self.output_size)        
- 
+
+        self.concatenate(self.output, self.s, self.output_size)
+
     cdef emu_profile_argument_render_ip(self, c_emu_profile_argument *argument, int indent):
         cdef c_in_addr *addr
         cdef char      *host
@@ -234,60 +234,60 @@ cdef class EmuProfile:
         addr = <c_in_addr *>&argument.value.tint
         host = inet_ntoa(addr[0])
 
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s %s = %i (host=%s);\n", 
-                 self.sep[indent], 
-                 argument.argtype, 
-                 argument.argname, 
-                 argument.value.tint, 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s %s = %i (host=%s);\n",
+                 self.sep[indent],
+                 argument.argtype,
+                 argument.argname,
+                 argument.value.tint,
                  host)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_port(self, c_emu_profile_argument *argument, int indent):
         cdef uint16_t port
 
         port = ntohs(<uint16_t>argument.value.tint)
-        
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s %s %s = %i (port=%i);\n", 
-                 self.sep[indent], 
-                 argument.argtype, 
-                 argument.argname, 
-                 argument.value.tint, 
+
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s %s %s = %i (port=%i);\n",
+                 self.sep[indent],
+                 argument.argtype,
+                 argument.argname,
+                 argument.value.tint,
                  port)
 
-        self.strncat(self.output, self.s, self.output_size)        
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_argument_render_none(self, c_emu_profile_argument *argument, int indent):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 "%s none;\n", 
+        snprintf(self.s,
+                 S_SIZE,
+                 "%s none;\n",
                  self.sep[indent])
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_function_render_none(self):
         return
 
     cdef emu_profile_function_render_int(self, int value):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 " =  %i;\n", 
+        snprintf(self.s,
+                 S_SIZE,
+                 " =  %i;\n",
                  value)
 
-        self.strncat(self.output, self.s, self.output_size)
+        self.concatenate(self.output, self.s, self.output_size)
 
     cdef emu_profile_function_render_ptr(self, void* ptr):
-        snprintf(self.s, 
-                 S_SIZE, 
-                 " = 0x%08x;\n", 
+        snprintf(self.s,
+                 S_SIZE,
+                 " = 0x%08x;\n",
                  ptr)
 
-        self.strncat(self.output, self.s, self.output_size)
-        
+        self.concatenate(self.output, self.s, self.output_size)
+
     cdef emu_profile_argument_debug(self, c_emu_profile_argument *argument, int indent):
         cdef c_emu_profile_argument *argit
         cdef c_emu_profile_argument *argumentit
@@ -297,7 +297,7 @@ cdef class EmuProfile:
             self.log_struct_start(argument, indent)
 
             argumentit = emu_profile_arguments_first(argument.value.tstruct.arguments)
-            
+
             while not emu_profile_arguments_istail(argumentit):
                 self.emu_profile_argument_debug(argumentit, indent + 1)
                 argumentit = emu_profile_arguments_next(argumentit)
@@ -307,7 +307,7 @@ cdef class EmuProfile:
 
         if argument.render == render_array:
             self.log_array_start(argument, indent)
-            
+
             argumentit = emu_profile_arguments_first(argument.value.tstruct.arguments)
             while not emu_profile_arguments_istail(argumentit):
                 self.emu_profile_argument_debug(argumentit, indent + 1)
@@ -360,14 +360,14 @@ cdef class EmuProfile:
 
     cdef emu_profile_function_debug(self, c_emu_profile_function *function):
         self.log_function_header(function)
-        
+
         argument = emu_profile_arguments_first(function.arguments)
         while not emu_profile_arguments_istail(argument):
             self.emu_profile_argument_debug(argument, 1)
             argument = emu_profile_arguments_next(argument)
 
         self.log_bracket_closed()
-        
+
         render = function.return_value.render
 
         if render == render_none:
@@ -420,16 +420,16 @@ cdef class Emulator:
 
     def shellcode_getpc_test(self, shellcode):
         '''
-        GetPC code is code that determines its own location in a process address 
-        space.  It is commonly used in code that needs to  reference itself, for 
-        instance in self-decoding and self-modifying code.  This method tries to 
-        identify GetPC within the shellcode. 
-        
-        @type  shellcode: Binary string      
+        GetPC code is code that determines its own location in a process address
+        space.  It is commonly used in code that needs to  reference itself, for
+        instance in self-decoding and self-modifying code.  This method tries to
+        identify GetPC within the shellcode.
+
+        @type  shellcode: Binary string
         @param shellcode: Shellcode
 
         @rtype:     Integer
-        @return:    If GetPC code is successfully identified the offset from the 
+        @return:    If GetPC code is successfully identified the offset from the
                     start of the shellcode is returned, otherwise -1.
         '''
         cdef char *buffer
@@ -482,15 +482,15 @@ cdef class Emulator:
         emu_memory_write_dword(_mem, 0x01001265, 4711)
         emu_memory_write_dword(_mem, 0x8a000066, 4711)
 
-        # Set the flags 
+        # Set the flags
         emu_cpu_eflags_set(_cpu, 0)
 
-        # Write the code to the offset 
+        # Write the code to the offset
         scode = <char *>shellcode
         static_offset = 0x417000
         emu_memory_write_block(_mem, static_offset, scode, len(shellcode))
 
-        # Set eip to the code 
+        # Set eip to the code
         emu_cpu_eip_set(emu_cpu_get(self._emu), static_offset + offset)
 
         emu_memory_write_block(_mem, 0x0012fe98, scode, len(shellcode))
@@ -498,7 +498,7 @@ cdef class Emulator:
 
     cpdef int test(self, steps = 1000000):
         '''
-        Method used to test and emulate the shellcode. The method must be always 
+        Method used to test and emulate the shellcode. The method must be always
         called after the `prepare' method.
 
         @type   steps:  Integer
@@ -571,7 +571,7 @@ cdef class Emulator:
 
         self.prepare(shellcode, offset)
         return self.test()
-        
+
     @property
     def offset(self):
         return self._offset

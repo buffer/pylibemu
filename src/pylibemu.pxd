@@ -46,6 +46,7 @@ cdef extern from "stdlib.h":
     void free(void* )
     void *malloc(size_t)
 
+
 cdef extern from "string.h":
     char *strncat(char *, char *, size_t)
     void *memset(void *, int , size_t)
@@ -53,7 +54,7 @@ cdef extern from "string.h":
 cdef extern from "netinet/in.h":
     ctypedef struct c_in_addr "struct in_addr":
         pass
-    
+
 cdef extern from "arpa/inet.h":
     uint16_t ntohs(uint16_t)
     char     *inet_ntoa(c_in_addr)
@@ -95,7 +96,7 @@ cdef extern from "emu/environment/emu_profile.h":
 
     ctypedef struct c_tstruct:
         c_emu_profile_argument_root         *arguments
-    
+
     ctypedef struct c_tptr:
         c_emu_profile_argument              *ptr
         uint32_t                            addr
@@ -110,7 +111,7 @@ cdef extern from "emu/environment/emu_profile.h":
 
     ctypedef struct c_emu_profile_argument "struct emu_profile_argument":
         emu_profile_argument_render         render
-        c_emu_profile_argument_value        value                               
+        c_emu_profile_argument_value        value
         char                                *argname
         char                                *argtype
 
@@ -182,25 +183,25 @@ cdef extern from "emu/emu.h":
         pass
 
     c_emu           *emu_new()
-    void            emu_free(c_emu *e) 
-    c_emu_memory    *emu_memory_get(c_emu *e) 
-    c_emu_logging   *emu_logging_get(c_emu *e) 
-    c_emu_cpu       *emu_cpu_get(c_emu *e) 
-    int             emu_errno(c_emu *c) 
+    void            emu_free(c_emu *e)
+    c_emu_memory    *emu_memory_get(c_emu *e)
+    c_emu_logging   *emu_logging_get(c_emu *e)
+    c_emu_cpu       *emu_cpu_get(c_emu *e)
+    int             emu_errno(c_emu *c)
     char            *emu_strerror(c_emu *e)
 
 
 cdef extern from "emu/emu_cpu.h":
     ctypedef enum c_emu_reg32 "enum emu_reg32":
         eax = 0
-        ecx = 1 
-        edx = 2 
-        ebx = 3 
-        esp = 4 
+        ecx = 1
+        edx = 2
+        ebx = 3
+        esp = 4
         ebp = 5
-        esi = 6 
+        esi = 6
         edi = 7
-    
+
     void     emu_cpu_reg32_set(c_emu_cpu *cpu_p, c_emu_reg32 reg, uint32_t val)
     void     emu_cpu_eflags_set(c_emu_cpu *c, uint32_t val)
     void     emu_cpu_eip_set(c_emu_cpu *c, uint32_t eip)
@@ -232,7 +233,7 @@ cdef extern from "emu/environment/emu_env.h":
          c_emu_env_linux     *lin
 
     ctypedef struct c_emu_env "struct emu_env":
-        c_env           env 
+        c_env           env
         c_emu           *emu
         c_emu_profile   *profile
         void            *userdata
