@@ -94,6 +94,58 @@ int recv (
 False
 
 
+The new Emulator method `run' was introduced in Pylibemu 0.1.3  which allows not to 
+worry about details. Moreover the new Emulator attribute `offset' allows to get such
+information if needed. 
+ 
+
+>>> emulator = pylibemu.Emulator()
+>>> emulator.run(shellcode)
+0
+>>> emulator.offset
+4
+>>> print emulator.emu_profile_output
+HMODULE LoadLibraryA (
+     LPCTSTR = 0x01a3f990 => 
+           = "ws2_32";
+) =  1906376704;
+int WSAStartup (
+     WORD wVersionRequested = 2;
+     LPWSADATA lpWSAData = 1244272;
+) =  0;
+SOCKET WSASocket (
+     int af = 2;
+     int type = 1;
+     int protocol = 0;
+     LPWSAPROTOCOL_INFO lpProtocolInfo = 0;
+     GROUP g = 0;
+     DWORD dwFlags = 0;
+) =  66;
+int connect (
+     SOCKET s = 66;
+     struct sockaddr_in * name = 0x0012fe88 => 
+         struct   = {
+             short sin_family = 2;
+             unsigned short sin_port = 23569 (port=4444);
+             struct in_addr sin_addr = {
+                 unsigned long s_addr = 339060928 (host=192.168.53.20);
+             };
+             char sin_zero = "       ";
+         };
+     int namelen = 16;
+) =  0;
+int recv (
+     SOCKET s = 66;
+     char * = 0x01a40870 => 
+         none;
+     int len = 3072;
+     int flags = 0;
+) =  3072;
+
+>>> emulator.emu_profile_truncated
+False
+
+
 The Emulator accepts the optional parameter `output_size' which defines how much memory 
 will be reserved for storing the emulation profile dump. By default, its size is 1MB but 
 it be can changed in two possible ways

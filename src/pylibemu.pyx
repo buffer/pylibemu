@@ -25,9 +25,7 @@ import urllib2
 import hashlib
 import logging
 
-FORMAT = '%(asctime)s %(message)s'
-logging.basicConfig(format = FORMAT, datefmt='[%Y-%m-%d %H:%M:%S]')
-
+logging.basicConfig(format = '%(asctime)s %(message)s', datefmt='[%Y-%m-%d %H:%M:%S]')
 
 # User hooks
 cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
@@ -395,8 +393,9 @@ cdef class EmuProfile:
 
 cdef class Emulator:
     cdef c_emu      *_emu
-    cdef size_t     output_size
     cdef EmuProfile emu_profile
+    cdef int32_t    _offset
+    cdef size_t     output_size
 
     def __cinit__(self, output_size = OUTPUT_SIZE):
         self.output_size = output_size
@@ -411,7 +410,7 @@ cdef class Emulator:
             self._emu = NULL
 
     def new(self):
-        self._emu = emu_new()
+        self._emu        = emu_new()
         self.emu_profile = EmuProfile(self.output_size)
 
     def set_output_size(self, output_size):
@@ -433,21 +432,19 @@ cdef class Emulator:
         @return:    If GetPC code is successfully identified the offset from the 
                     start of the shellcode is returned, otherwise -1.
         '''
-
-        cdef char    *buffer
-        cdef int32_t  offset = -1
+        cdef char *buffer
 
         if self._emu is NULL:
-            self.alloc()
+            self.new()
 
         buffer = <char *>shellcode
         sclen  = len(bytes(shellcode))
 
         if buffer is NULL:
-            return offset
+            return -1
 
-        offset = emu_shellcode_test(self._emu, <uint8_t *>buffer, sclen)
-        return offset
+        self._offset = emu_shellcode_test(self._emu, <uint8_t *>buffer, sclen)
+        return self._offset
 
     def prepare(self, shellcode, offset):
         '''
@@ -565,6 +562,20 @@ cdef class Emulator:
         self.emu_profile.emu_profile_debug(_env)
         return 0
 
+    cpdef int run(self, shellcode):
+        cdef int32_t offset
+
+        offset = self.shellcode_getpc_test(shellcode)
+        if offset < 0:
+            offset = 0
+
+        self.prepare(shellcode, offset)
+        return self.test()
+        
+    @property
+    def offset(self):
+        return self._offset
+
     @property
     def emu_profile_output(self):
         return self.emu_profile.output
@@ -572,9 +583,3 @@ cdef class Emulator:
     @property
     def emu_profile_truncated(self):
         return self.emu_profile.truncate
-
-        
-
-
-
-

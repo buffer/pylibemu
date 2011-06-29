@@ -39,7 +39,7 @@ class ShellcodeTest():
             test()
             index += 1
 
-    def runShellcode(self, shellcode, index):
+    def _runShellcode(self, shellcode, index):
         self.emulator.new()
         offset = self.emulator.shellcode_getpc_test(shellcode)
         if offset < 0:
@@ -54,6 +54,17 @@ class ShellcodeTest():
         if self.emulator.emu_profile_truncated:
             self.log.warning("[WARNING] Emulation profile truncated")
         
+        self.emulator.free()
+
+    def runShellcode(self, shellcode, index):
+        self.emulator.new()
+        self.emulator.run(shellcode)
+
+        self.log.debug("Offset: %d" % (self.emulator.offset, ))
+        self.log.info(self.emulator.emu_profile_output)
+        if self.emulator.emu_profile_truncated:
+            self.log.warning("[WARNING] Emulation profile truncated")
+
         self.emulator.free()
 
     def testShellcode0(self):
