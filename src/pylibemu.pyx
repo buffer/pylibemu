@@ -583,3 +583,16 @@ cdef class Emulator:
     @property
     def emu_profile_truncated(self):
         return self.emu_profile.truncate
+
+    def memory_write_dword(self, addr, dword):
+        cdef c_emu_memory   *_mem
+        
+        if self._emu is NULL:
+            return -1
+
+        _mem = emu_memory_get(self._emu)
+        
+        emu_memory_write_dword(_mem, addr, dword)
+
+        return 0
+
