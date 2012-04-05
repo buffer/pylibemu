@@ -27,6 +27,17 @@ import logging
 
 logging.basicConfig(format = '%(asctime)s %(message)s', datefmt='[%Y-%m-%d %H:%M:%S]')
 
+# export register numbers
+class EMU_REGS:
+    eax = 0
+    ecx = 1
+    edx = 2
+    ebx = 3
+    esp = 4
+    ebp = 5
+    esi = 6
+    edi = 7
+
 # User hooks
 cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     cdef va_list args
@@ -583,3 +594,29 @@ cdef class Emulator:
     @property
     def emu_profile_truncated(self):
         return self.emu_profile.truncate
+
+    def memory_write_dword(self, addr, dword):
+        cdef c_emu_memory   *_mem
+        
+        if self._emu is NULL:
+            return -1
+
+        _mem = emu_memory_get(self._emu)
+        
+        emu_memory_write_dword(_mem, addr, dword)
+
+        return 0
+
+    def cpu_reg32_set(self, reg, val):
+        cdef c_emu_cpu      *_cpu
+
+        if self._emu is NULL:
+            return -1
+
+        _cpu = emu_cpu_get(self._emu)
+
+        emu_cpu_reg32_set(_cpu, reg, val)
+
+        return 0
+        
+
