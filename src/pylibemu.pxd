@@ -203,6 +203,7 @@ cdef extern from "emu/emu_cpu.h":
         edi = 7
 
     void     emu_cpu_reg32_set(c_emu_cpu *cpu_p, c_emu_reg32 reg, uint32_t val)
+    uint32_t emu_cpu_reg32_get(c_emu_cpu *cpu_p, c_emu_reg32 reg)
     void     emu_cpu_eflags_set(c_emu_cpu *c, uint32_t val)
     void     emu_cpu_eip_set(c_emu_cpu *c, uint32_t eip)
     uint32_t emu_cpu_eip_get(c_emu_cpu *c)

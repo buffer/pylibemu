@@ -618,5 +618,23 @@ cdef class Emulator:
         emu_cpu_reg32_set(_cpu, reg, val)
 
         return 0
+
+    def cpu_reg32_get(self, reg):
+        cdef c_emu_cpu      *_cpu
+
+        if self._emu is NULL:
+            return -1
+
+        _cpu = emu_cpu_get(self._emu)
+
+        val = emu_cpu_reg32_get(_cpu, reg)
+
+        return val
+    
+    def cpu_step(self):
+        if self._emu is NULL:
+            return -1
         
+        return emu_cpu_step(emu_cpu_get(self._emu))
+
 
