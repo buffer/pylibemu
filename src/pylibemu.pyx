@@ -1,7 +1,7 @@
 #
 # pylibemu.pyx
 #
-# Copyright(c) 2011 Angelo Dell'Aera <buffer@antifork.org>
+# Copyright(c) 2011-2012 Angelo Dell'Aera <buffer@antifork.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -596,27 +596,23 @@ cdef class Emulator:
         return self.emu_profile.truncate
 
     def memory_write_dword(self, addr, dword):
-        cdef c_emu_memory   *_mem
+        cdef c_emu_memory *_mem
         
         if self._emu is NULL:
             return -1
 
         _mem = emu_memory_get(self._emu)
-        
         emu_memory_write_dword(_mem, addr, dword)
-
         return 0
 
     def cpu_reg32_set(self, reg, val):
-        cdef c_emu_cpu      *_cpu
+        cdef c_emu_cpu *_cpu
 
         if self._emu is NULL:
             return -1
 
         _cpu = emu_cpu_get(self._emu)
-
         emu_cpu_reg32_set(_cpu, reg, val)
-
         return 0
 
     def cpu_reg32_get(self, reg):
@@ -637,4 +633,11 @@ cdef class Emulator:
         
         return emu_cpu_step(emu_cpu_get(self._emu))
 
+    def cpu_eip_get(self):
+        cdef c_emu_cpu *_cpu
 
+        if self._emu is NULL:
+            return -1
+
+        _cpu = emu_cpu_get(self._emu)
+        return <uint32_t>emu_cpu_eip_get(_cpu)

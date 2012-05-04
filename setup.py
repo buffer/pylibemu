@@ -7,7 +7,7 @@ sourcefiles  = ['src/pylibemu.c']
 setup(
     name         = "pylibemu",
     packages     = [],
-    version      = "0.1.4",
+    version      = "0.1.5",
     description  = "Libemu Python wrapper",
     url          = "",
     author       = "Angelo Dell'Aera",
