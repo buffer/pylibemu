@@ -616,16 +616,13 @@ cdef class Emulator:
         return 0
 
     def cpu_reg32_get(self, reg):
-        cdef c_emu_cpu      *_cpu
+        cdef c_emu_cpu *_cpu
 
         if self._emu is NULL:
             return -1
 
         _cpu = emu_cpu_get(self._emu)
-
-        val = emu_cpu_reg32_get(_cpu, reg)
-
-        return val
+        return <uint32_t>emu_cpu_reg32_get(_cpu, reg)
     
     def cpu_step(self):
         if self._emu is NULL:
