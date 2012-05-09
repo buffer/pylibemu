@@ -638,3 +638,47 @@ cdef class Emulator:
 
         _cpu = emu_cpu_get(self._emu)
         return <uint32_t>emu_cpu_eip_get(_cpu)
+
+    def memory_read_dword(self, addr):
+        cdef c_emu_memory *_mem
+        cdef uint32_t dword
+
+        if self._emu is NULL:
+            return -1
+
+        _mem = emu_memory_get(self._emu)
+        emu_memory_read_dword(_mem, addr, &dword)
+        return dword
+
+    def memory_read(self, addr, type, size = 8):
+        cdef c_emu_memory *_mem
+        cdef uint8_t byte
+        #cdef char byte
+        cdef uint16_t word
+        cdef uint32_t dword
+        #cdef void dest
+        #cdef c_emu_string *s
+        
+
+        if self._emu is NULL:
+            return -1
+
+        _mem = emu_memory_get(self._emu)
+        
+        if type == "byte":
+            emu_memory_read_byte(_mem, addr, &byte)
+            return byte
+        elif type == "word":
+            emu_memory_read_word(_mem, addr, &word)
+            return word
+        elif type == "dword":
+            emu_memory_read_dword(_mem, addr, &dword)
+            return dword
+        #elif type == "block":
+        #    emu_memory_read_block(_mem, addr, &dest, size)
+        #    return dest
+        #elif type == "string":
+        #    emu_memory_read_string(_mem, addr, &s, size)
+        #    return *s
+
+        return -1
