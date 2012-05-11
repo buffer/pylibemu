@@ -63,11 +63,19 @@ cdef extern from "emu/emu_memory.h":
     ctypedef struct c_emu_memory "struct emu_memory":
         pass
 
+    ctypedef struct c_emu_string "struct emu_string":
+        pass
+
     int32_t emu_memory_write_byte(c_emu_memory *m, uint32_t addr, uint8_t byte)
     int32_t emu_memory_write_word(c_emu_memory *m, uint32_t addr, uint16_t word)
     int32_t emu_memory_write_dword(c_emu_memory *m, uint32_t addr, uint32_t dword)
     int32_t emu_memory_write_block(c_emu_memory *m, uint32_t addr, void *src, size_t len)
 
+    int32_t emu_memory_read_byte(c_emu_memory *m, uint32_t addr, uint8_t *byte)
+    int32_t emu_memory_read_word(c_emu_memory *m, uint32_t addr, uint16_t *word)
+    int32_t emu_memory_read_dword(c_emu_memory *m, uint32_t addr, uint32_t *dword)
+    int32_t emu_memory_read_block(c_emu_memory *m, uint32_t addr, void *dest, size_t len)
+    int32_t emu_memory_read_string(c_emu_memory *m, uint32_t addr, c_emu_string *s, uint32_t maxsize)
 
 cdef extern from "emu/environment/emu_profile.h":
     cdef enum emu_profile_argument_render:
