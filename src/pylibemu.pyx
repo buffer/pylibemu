@@ -515,7 +515,6 @@ cdef class Emulator:
         @type   steps:  Integer
         @param  steps:  Max number of steps to run
         '''
-
         cdef c_emu_cpu      *_cpu
         cdef c_emu_memory   *_mem
         cdef c_emu_env      *_env
@@ -595,46 +594,558 @@ cdef class Emulator:
     def emu_profile_truncated(self):
         return self.emu_profile.truncate
 
-    def memory_write_dword(self, addr, dword):
-        cdef c_emu_memory *_mem
-        
-        if self._emu is NULL:
-            return -1
+    # CPU methods
+    def cpu_reg32_get(self, c_emu_reg32 reg):
+        ''' 
+        Method used to get the 32-bit value stored in a register
 
-        _mem = emu_memory_get(self._emu)
-        emu_memory_write_dword(_mem, addr, dword)
-        return 0
+        @type   reg:  Integer
+        @param  reg:  Register index
+                        eax = 0
+                        ecx = 1
+                        edx = 2
+                        ebx = 3
+                        esp = 4
+                        ebp = 5
+                        esi = 6
+                        edi = 7
 
-    def cpu_reg32_set(self, reg, val):
+        @rtype:     uint32_t 
+        @return:    32-bit value stored in the register
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
         cdef c_emu_cpu *_cpu
 
         if self._emu is NULL:
-            return -1
-
-        _cpu = emu_cpu_get(self._emu)
-        emu_cpu_reg32_set(_cpu, reg, val)
-        return 0
-
-    def cpu_reg32_get(self, reg):
-        cdef c_emu_cpu *_cpu
-
-        if self._emu is NULL:
-            return -1
+            raise RuntimeError('Emulator not initialized')
 
         _cpu = emu_cpu_get(self._emu)
         return <uint32_t>emu_cpu_reg32_get(_cpu, reg)
-    
-    def cpu_step(self):
-        if self._emu is NULL:
-            return -1
-        
-        return emu_cpu_step(emu_cpu_get(self._emu))
 
-    def cpu_eip_get(self):
+    def cpu_reg32_set(self, c_emu_reg32 reg, uint32_t val):
+        ''' 
+        Method used to set a register with a 32-bit value
+
+        @type   reg:  Integer
+        @param  reg:  Register index
+                        eax = 0
+                        ecx = 1
+                        edx = 2
+                        ebx = 3
+                        esp = 4
+                        ebp = 5
+                        esi = 6
+                        edi = 7
+
+        @type   val:  uint32_t
+        @param  val:  32-bit value
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
         cdef c_emu_cpu *_cpu
 
         if self._emu is NULL:
-            return -1
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_reg32_set(_cpu, reg, val)
+
+    def cpu_reg16_get(self, c_emu_reg16 reg):
+        ''' 
+        Method used to get the 16-bit value stored in a register
+
+        @type   reg:  Integer
+        @param  reg:  Register index
+                        ax = 0
+                        cx = 1
+                        dx = 2
+                        bx = 3
+                        sp = 4
+                        bp = 5
+                        si = 6
+                        di = 7
+
+        @rtype:     uint16_t 
+        @return:    16-bit value stored in the register
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        return <uint16_t>emu_cpu_reg16_get(_cpu, reg)
+
+    def cpu_reg16_set(self, c_emu_reg16 reg, uint16_t val):
+        ''' 
+        Method used to set a register with a 16-bit value
+
+        @type   reg:  Integer
+        @param  reg:  Register index
+                        ax = 0
+                        cx = 1
+                        dx = 2
+                        bx = 3
+                        sp = 4
+                        bp = 5
+                        si = 6
+                        di = 7
+
+        @type   val:  uint16_t
+        @param  val:  16-bit value
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_reg16_set(_cpu, reg, val)
+
+    def cpu_reg8_get(self, c_emu_reg8 reg):
+        ''' 
+        Method used to get the 8-bit value stored in a register
+
+        @type   reg:  Integer
+        @param  reg:  Register index
+                        al = 0
+                        cl = 1
+                        dl = 2
+                        bl = 3
+                        ah = 4
+                        ch = 5
+                        dh = 6
+                        bh = 7
+
+        @rtype:     uint8_t 
+        @return:    8-bit value stored in the register
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+    
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+    
+        _cpu = emu_cpu_get(self._emu)
+        return <uint8_t>emu_cpu_reg8_get(_cpu, reg)
+    
+    def cpu_reg8_set(self, c_emu_reg8 reg, uint8_t val):
+        ''' 
+        Method used to set a register with a 8-bit value
+
+        @type   reg:  Integer
+        @param  reg:  Register index
+                        al = 0
+                        cl = 1
+                        dl = 2
+                        bl = 3
+                        ah = 4
+                        ch = 5
+                        dh = 6
+                        bh = 7
+
+        @type   val:  uint8_t
+        @param  val:  8-bit value
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+        
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_reg8_set(_cpu, reg, val)
+
+    def cpu_eflags_get(self):
+        '''
+        Method used to get the 32-bit value stored in the register eflags
+
+        @rtype:     uint32_t 
+        @return:    32-bit value stored in the register eflags
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        return <uint32_t>emu_cpu_eflags_get(_cpu)
+
+    def cpu_eflags_set(self, uint32_t val):
+        ''' 
+        Method used to set the register eflags with a 32-bit value
+
+        @type   val:  uint32_t
+        @param  val:  32-bit value
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_eflags_set(_cpu, val)
+
+    def cpu_eip_set(self, uint32_t eip):
+        ''' 
+        Method used to set the register eip with a 32-bit value
+
+        @type   val:  uint32_t
+        @param  val:  32-bit value
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_eip_set(_cpu, eip)
+
+    def cpu_eip_get(self):
+        '''
+        Method used to get the 32-bit value stored in the register eip
+
+        @rtype:     uint32_t 
+        @return:    32-bit value stored in the register eip
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
 
         _cpu = emu_cpu_get(self._emu)
         return <uint32_t>emu_cpu_eip_get(_cpu)
+
+    def cpu_parse(self):
+        ''' 
+        Method used to parse an instruction at eip
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+    
+        _cpu = emu_cpu_get(self._emu)
+        return <int32_t>emu_cpu_parse(_cpu)
+
+    def cpu_step(self):
+        ''' 
+        Method used to step the last instruction
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+        
+        _cpu = emu_cpu_get(self._emu)
+        return <int32_t>emu_cpu_step(_cpu)
+
+    def cpu_debugflag_set(self, uint8_t flag):
+        ''' 
+        Method used to set a cpu debug flag
+
+        @type   flag:  uint8_t
+        @param  flag:  flag to set
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_debugflag_set(_cpu, flag)
+
+    def cpu_debugflag_unset(self, uint8_t flag):
+        ''' 
+        Method used to unset a cpu debug flag
+
+        @type   flag:  uint8_t
+        @param  flag:  flag to unset
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_cpu *_cpu
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _cpu = emu_cpu_get(self._emu)
+        emu_cpu_debugflag_unset(_cpu, flag)
+
+    # Memory methods
+    def memory_write_byte(self, uint32_t addr, uint8_t byte):
+        '''
+        Method used to write a byte at a memory location
+
+        @type   addr:  uint32_t
+        @param  addr:  memory location address
+
+        @type   byte:  uint8_t
+        @param  byte:  byte to write
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        emu_memory_write_byte(_mem, addr, byte)
+
+    def memory_write_word(self, uint32_t addr, uint16_t word):
+        '''
+        Method used to write a word at a memory location
+
+        @type   addr:  uint32_t
+        @param  addr:  memory location address
+
+        @type   word:  uint16_t
+        @param  word:  word to write
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        emu_memory_write_word(_mem, addr, word)
+
+    def memory_write_dword(self, uint32_t addr, uint32_t dword):
+        ''' 
+        Method used to write a dword at a memory location
+
+        @type   addr:  uint32_t
+        @param  addr:  memory location address
+
+        @type   dword:  uint32_t
+        @param  dword:  dword to write
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        emu_memory_write_dword(_mem, addr, dword)
+
+    def memory_write_block(self, uint32_t addr, src, size_t _len):
+        ''' 
+        Method used to write a block at a memory location
+
+        @type   addr:   uint32_t
+        @param  addr:   memory location address
+
+        @type   src:    bytes
+        @param  src:    block of data to write
+
+        @type   _len:   size_t
+        @param  _len:   block size
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        emu_memory_write_block(_mem, addr, <void *>src, _len)
+
+    def memory_read_byte(self, uint32_t addr):
+        ''' 
+        Method used to read a byte at a memory location
+
+        @type   addr:  uint32_t
+        @param  addr:  memory location address
+
+        @rtype:     uint8_t 
+        @return:    byte at memory location address
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+        cdef uint8_t      *byte
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        if emu_memory_read_byte(_mem, addr, byte):
+            raise RuntimeError("Error while reading a byte at address 0x%x" % (addr, ))
+
+        return byte[0]
+
+    def memory_read_word(self, uint32_t addr):
+        ''' 
+        Method used to read a word at a memory location
+
+        @type   addr:  uint32_t
+        @param  addr:  memory location address
+
+        @rtype:     uint16_t 
+        @return:    word at memory location address
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+        cdef uint16_t     *word
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        if emu_memory_read_word(_mem, addr, word):
+            raise RuntimeError("Error while reading a word at address 0x%x" % (addr, ))
+
+        return word[0]
+
+    def memory_read_dword(self, uint32_t addr):
+        ''' 
+        Method used to read a dword at a memory location
+
+        @type   addr:  uint32_t
+        @param  addr:  memory location address
+
+        @rtype:     uint32_t 
+        @return:    word at memory location address
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+        cdef uint32_t     *dword
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        if emu_memory_read_dword(_mem, addr, dword):
+            raise RuntimeError("Error while reading a word at address 0x%x" % (addr, ))
+
+        return dword[0]
+
+    def memory_read_block(self, uint32_t addr, size_t _len):
+        '''  
+        Method used to read a block at a memory location
+
+        @type   addr:     uint32_t
+        @param  addr:     memory location address
+
+        @type   _len:  size_t
+        @param  _len:  block size
+
+        @rtype:     char * 
+        @return:    block at memory location address
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+        cdef void         *block
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        if emu_memory_read_block(_mem, addr, block, _len):
+            raise RuntimeError("Error while reading a dword at address 0x%x" % (addr, ))
+
+        return <char *>block
+
+    def memory_read_string(self, uint32_t addr, uint32_t maxsize):
+        ''' 
+        Method used to read a string at a memory location
+
+        @type   addr:     uint32_t
+        @param  addr:     memory location address
+
+        @type   maxsize:  uint32_t
+        @param  maxsize:  string max size
+
+        @rtype:     char * 
+        @return:    string at memory location address
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+        cdef c_emu_string *s
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        if emu_memory_read_string(_mem, addr, s, maxsize):
+            raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
+
+        return <char *>s[0].data
+
+    def memory_segment_select(self, c_emu_segment segment):
+        '''  
+        Method used to select a segment
+
+        @type   segment:    Integer
+        @param  segment:    Segment index
+                                s_cs = 0 
+                                s_ss = 1 
+                                s_ds = 2 
+                                s_es = 3 
+                                s_fs = 4 
+                                s_gs = 5 
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        emu_memory_segment_select(_mem, segment)
+
+    def memory_segment_get(self):
+        '''  
+        Method used to get the current segment
+
+        @rtype   segment:     Integer
+        @rparam  segment:     Segment index
+                                s_cs = 0 
+                                s_ss = 1 
+                                s_ds = 2 
+                                s_es = 3 
+                                s_fs = 4 
+                                s_gs = 5 
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_memory *_mem
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _mem = emu_memory_get(self._emu)
+        return emu_memory_segment_get(_mem)
+

@@ -24,6 +24,7 @@ cimport cpython
 cdef extern from *:
     ctypedef char* const_char_ptr "const char*"
 
+
 cdef extern from "stdarg.h":
     ctypedef struct va_list:
         pass
@@ -39,8 +40,10 @@ cdef extern from "stdarg.h":
     fake_type char_ptr_type "char *"
     fake_type int_type "int"
 
+
 cdef extern from "stdio.h":
     int snprintf(char *, size_t, char *, ...)
+
 
 cdef extern from "stdlib.h":
     void free(void* )
@@ -51,22 +54,49 @@ cdef extern from "string.h":
     char *strncat(char *, char *, size_t)
     void *memset(void *, int , size_t)
 
+
 cdef extern from "netinet/in.h":
     ctypedef struct c_in_addr "struct in_addr":
         pass
+
 
 cdef extern from "arpa/inet.h":
     uint16_t ntohs(uint16_t)
     char     *inet_ntoa(c_in_addr)
 
+
+cdef extern from "emu/emu_string.h":
+    ctypedef struct c_emu_string "struct emu_string":
+        uint32_t    size
+        void        *data
+        uint32_t    allocated
+
+
 cdef extern from "emu/emu_memory.h":
     ctypedef struct c_emu_memory "struct emu_memory":
         pass
 
+    ctypedef enum c_emu_segment "enum emu_segment":
+        s_cs = 0
+        s_ss = 1
+        s_ds = 2
+        s_es = 3
+        s_fs = 4
+        s_gs = 5
+        
     int32_t emu_memory_write_byte(c_emu_memory *m, uint32_t addr, uint8_t byte)
     int32_t emu_memory_write_word(c_emu_memory *m, uint32_t addr, uint16_t word)
     int32_t emu_memory_write_dword(c_emu_memory *m, uint32_t addr, uint32_t dword)
-    int32_t emu_memory_write_block(c_emu_memory *m, uint32_t addr, void *src, size_t len)
+    int32_t emu_memory_write_block(c_emu_memory *m, uint32_t addr, void *src, size_t _len)
+
+    int32_t emu_memory_read_byte(c_emu_memory *m, uint32_t addr, uint8_t *byte)
+    int32_t emu_memory_read_word(c_emu_memory *m, uint32_t addr, uint16_t *word)
+    int32_t emu_memory_read_dword(c_emu_memory *m, uint32_t addr, uint32_t *dword)
+    int32_t emu_memory_read_block(c_emu_memory *m, uint32_t addr, void *dest, size_t _len)
+    int32_t emu_memory_read_string(c_emu_memory *m, uint32_t addr, c_emu_string *s, uint32_t maxsize)
+
+    void emu_memory_segment_select(c_emu_memory *m, c_emu_segment s)
+    c_emu_segment emu_memory_segment_get(c_emu_memory *m)
 
 
 cdef extern from "emu/environment/emu_profile.h":
@@ -202,13 +232,43 @@ cdef extern from "emu/emu_cpu.h":
         esi = 6
         edi = 7
 
-    void     emu_cpu_reg32_set(c_emu_cpu *cpu_p, c_emu_reg32 reg, uint32_t val)
+    ctypedef enum c_emu_reg16 "enum emu_reg16":
+        ax = 0 
+        cx = 1 
+        dx = 2 
+        bx = 3 
+        sp = 4 
+        bp = 5 
+        si = 6 
+        di = 7 
+
+    ctypedef enum c_emu_reg8 "enum emu_reg8":
+        al = 0 
+        cl = 1 
+        dl = 2 
+        bl = 3 
+        ah = 4 
+        ch = 5 
+        dh = 6 
+        bh = 7 
+
     uint32_t emu_cpu_reg32_get(c_emu_cpu *cpu_p, c_emu_reg32 reg)
+    void     emu_cpu_reg32_set(c_emu_cpu *cpu_p, c_emu_reg32 reg, uint32_t val)
+    uint16_t emu_cpu_reg16_get(c_emu_cpu *cpu_p, c_emu_reg16 reg)
+    void     emu_cpu_reg16_set(c_emu_cpu *cpu_p, c_emu_reg16 reg, uint16_t val)
+    uint8_t  emu_cpu_reg8_get(c_emu_cpu *cpu_p, c_emu_reg8 reg)
+    void     emu_cpu_reg8_set(c_emu_cpu *cpu_p, c_emu_reg8 reg, uint8_t val)
+    uint32_t emu_cpu_eflags_get(c_emu_cpu *c)
     void     emu_cpu_eflags_set(c_emu_cpu *c, uint32_t val)
     void     emu_cpu_eip_set(c_emu_cpu *c, uint32_t eip)
     uint32_t emu_cpu_eip_get(c_emu_cpu *c)
     int32_t  emu_cpu_parse(c_emu_cpu *c)
     int32_t  emu_cpu_step(c_emu_cpu *c)
+    int32_t  emu_cpu_run(c_emu_cpu *c)
+    void     emu_cpu_free(c_emu_cpu *c)
+    void     emu_cpu_debug_print(c_emu_cpu *c)
+    void     emu_cpu_debugflag_set(c_emu_cpu *c, uint8_t flag)
+    void     emu_cpu_debugflag_unset(c_emu_cpu *c, uint8_t flag)
 
 
 cdef extern from "emu/environment/linux/emu_env_linux.h":
@@ -218,15 +278,18 @@ cdef extern from "emu/environment/linux/emu_env_linux.h":
     ctypedef struct c_emu_env_linux_syscall "struct emu_env_linux_syscall":
         pass
 
+
 cdef extern from "emu/environment/win32/emu_env_w32.h":
     ctypedef struct c_emu_env_w32 "struct emu_env_w32":
         pass
+
 
 cdef extern from "emu/environment/win32/emu_env_w32_dll_export.h":
     ctypedef struct c_emu_env_w32_dll_export "struct emu_env_w32_dll_export":
         char        *fnname
         uint32_t    virtualaddr
         void        *userdata
+
 
 cdef extern from "emu/environment/emu_env.h":
     ctypedef struct c_env:
