@@ -1149,3 +1149,29 @@ cdef class Emulator:
         _mem = emu_memory_get(self._emu)
         return emu_memory_segment_get(_mem)
 
+    # Win32 environment
+    def env_w32_hook_check(self):
+        '''
+        Method used to check if a hooked Win32 API is at the
+        current eip 
+
+        @rtype      boolean
+        @rparam     True if a hooked Win32 API is at the current
+                    eip, False otherwise
+
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        cdef c_emu_env      *_env
+
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        _env = emu_env_new(self._emu)
+        if _env is NULL:
+            print emu_strerror(self._emu)
+            raise RuntimeError('Emulator environment error')
+
+        if emu_env_w32_eip_check(_env) is NULL:
+            return False
+
+        return True
