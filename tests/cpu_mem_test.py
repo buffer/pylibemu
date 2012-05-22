@@ -82,3 +82,11 @@ assert byte == 0x44
 
 emulator.memory_segment_select(5)
 assert emulator.memory_segment_get() == 5
+
+eip = emulator.cpu_eip_get()
+print hex(eip)
+dword = emulator.memory_read_dword(eip)
+print dword
+print emulator.cpu_parse()
+
+print emulator.env_w32_hook_check()
