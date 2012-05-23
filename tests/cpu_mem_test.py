@@ -98,4 +98,8 @@ print hex(byte)
 block = emulator.memory_read_block(eip, 4)
 print '0x' + ''.join(["%02x" % ord(x) for x in block[::-1]])
 
+emulator.memory_write_dword(emulator.cpu_reg32_get(i), 0x00414243)
+s = emulator.memory_read_string(emulator.cpu_reg32_get(i), 4)
+print s
+
 print emulator.env_w32_hook_check()
