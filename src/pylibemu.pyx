@@ -990,16 +990,16 @@ cdef class Emulator:
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_memory *_mem
-        cdef uint8_t      *byte
+        cdef uint8_t      byte
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
 
         _mem = emu_memory_get(self._emu)
-        if emu_memory_read_byte(_mem, addr, byte):
+        if emu_memory_read_byte(_mem, addr, &byte):
             raise RuntimeError("Error while reading a byte at address 0x%x" % (addr, ))
 
-        return byte[0]
+        return byte
 
     def memory_read_word(self, uint32_t addr):
         ''' 
@@ -1014,16 +1014,16 @@ cdef class Emulator:
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_memory *_mem
-        cdef uint16_t     *word
+        cdef uint16_t     word
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
 
         _mem = emu_memory_get(self._emu)
-        if emu_memory_read_word(_mem, addr, word):
+        if emu_memory_read_word(_mem, addr, &word):
             raise RuntimeError("Error while reading a word at address 0x%x" % (addr, ))
 
-        return word[0]
+        return word
 
     def memory_read_dword(self, uint32_t addr):
         ''' 
@@ -1038,16 +1038,16 @@ cdef class Emulator:
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_memory *_mem
-        cdef uint32_t     *dword
+        cdef uint32_t     dword
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
 
         _mem = emu_memory_get(self._emu)
-        if emu_memory_read_dword(_mem, addr, dword):
+        if emu_memory_read_dword(_mem, addr, &dword):
             raise RuntimeError("Error while reading a word at address 0x%x" % (addr, ))
 
-        return dword[0]
+        return dword
 
     def memory_read_block(self, uint32_t addr, size_t _len):
         '''  
@@ -1069,6 +1069,10 @@ cdef class Emulator:
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
+        
+        block = malloc(_len)
+        if block is NULL:
+            raise RuntimeError('Error while allocating memory')
 
         _mem = emu_memory_get(self._emu)
         if emu_memory_read_block(_mem, addr, block, _len):
@@ -1092,16 +1096,16 @@ cdef class Emulator:
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_memory *_mem
-        cdef c_emu_string *s
+        cdef c_emu_string s
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
 
         _mem = emu_memory_get(self._emu)
-        if emu_memory_read_string(_mem, addr, s, maxsize):
+        if emu_memory_read_string(_mem, addr, &s, maxsize):
             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
 
-        return <char *>s[0].data
+        return <char *>s.data
 
     def memory_segment_select(self, c_emu_segment segment):
         '''  
