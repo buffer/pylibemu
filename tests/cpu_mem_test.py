@@ -85,8 +85,17 @@ assert emulator.memory_segment_get() == 5
 
 eip = emulator.cpu_eip_get()
 print hex(eip)
+
 dword = emulator.memory_read_dword(eip)
-print dword
-print emulator.cpu_parse()
+print hex(dword)
+
+word = emulator.memory_read_word(eip)
+print hex(word)
+
+byte = emulator.memory_read_byte(eip)
+print hex(byte)
+
+block = emulator.memory_read_block(eip, 4)
+print '0x' + ''.join(["%02x" % ord(x) for x in block[::-1]])
 
 print emulator.env_w32_hook_check()
