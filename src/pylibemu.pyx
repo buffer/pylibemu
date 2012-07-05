@@ -893,6 +893,25 @@ cdef class Emulator:
         _cpu = emu_cpu_get(self._emu)
         emu_cpu_debugflag_unset(_cpu, flag)
 
+    def cpu_get_current_instruction(self):
+        '''
+        Method used to disassemble the current instruction
+        
+        @rtype  : string
+        @return : disassembled current instruction
+        
+        Raises RuntimeError if the Emulator is not initialized
+        '''
+        if self._emu is NULL:
+            raise RuntimeError('Emulator not initialized')
+
+        self.cpu_debugflag_set(1)
+        self.cpu_parse()
+        instr_string = emu_cpu_get(self._emu).instr_string
+        self.cpu_debugflag_unset(1)
+
+        return instr_string
+
     # Memory methods
     def memory_write_byte(self, uint32_t addr, uint8_t byte):
         '''
