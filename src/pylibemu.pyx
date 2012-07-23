@@ -525,6 +525,9 @@ cdef class Emulator:
         emu_memory_write_block(_mem, 0x0012fe98, scode, len(shellcode))
         emu_cpu_reg32_set(emu_cpu_get(self._emu), esp, 0x0012fe98)
 
+    cdef check_stop_emulation(self, c_emu_env_hook *hook):
+        return str(hook.hook.win.fnname) in ('ExitProcess', 'ExitThread', 'exit') 
+
     cpdef int test(self, steps = 1000000):
         '''
         Method used to test and emulate the shellcode. The method must be always
@@ -576,6 +579,9 @@ cdef class Emulator:
             if hook is not NULL:
                 if hook.hook.win.fnname is NULL:
                     logging.warning("Unhooked call to %s\n" % (hook.hook.win.fnname, ))
+                    break
+
+                if self.check_stop_emulation(hook):
                     break
             else:
                 ret = emu_cpu_parse(emu_cpu_get(self._emu))
