@@ -39,6 +39,24 @@ class EMU_REGS:
     edi = 7
 
 # User hooks
+cdef uint32_t ExitProcess(c_emu_env *env, c_emu_env_hook *hook...):
+    cdef va_list args
+    cdef int exitcode
+
+    va_start(args, <void *>hook)
+    exitcode = <int>va_arg(args, int_type)
+    va_end(args)
+    return 0
+
+cdef uint32_t ExitThread(c_emu_env *env, c_emu_env_hook *hook...):
+    cdef va_list args
+    cdef int exitcode
+
+    va_start(args, <void *>hook)
+    exitcode = <int>va_arg(args, int_type)
+    va_end(args)
+    return 0
+
 cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     cdef va_list args
     cdef void   *pCaller
@@ -540,6 +558,9 @@ cdef class Emulator:
         emu_memory_write_dword(_mem, 0x42ae1010, 0x7c80ada0)
         emu_memory_write_dword(_mem, 0x7c80ada0, 0x51ec8b55)
         emu_memory_write_byte(_mem,  0x7c814eeb, 0xc3)
+
+        emu_env_w32_export_hook(_env, "ExitProcess", ExitProcess,  NULL)
+        emu_env_w32_export_hook(_env, "ExitThread", ExitThread, NULL)
 
         emu_env_w32_load_dll(_env.env.win, "urlmon.dll")
         emu_env_w32_export_hook(_env, "URLDownloadToFileA", URLDownloadToFile,  NULL)
