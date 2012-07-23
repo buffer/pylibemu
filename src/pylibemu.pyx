@@ -286,7 +286,7 @@ cdef class EmuProfile:
     cdef emu_profile_function_render_int(self, int value):
         snprintf(self.s,
                  S_SIZE,
-                 " =  %i;\n",
+                 " =  0x%x;\n",
                  value)
 
         self.concatenate(self.output, self.s, self.output_size)
