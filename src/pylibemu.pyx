@@ -21,7 +21,12 @@ cimport pylibemu
 
 import sys
 import socket
-import urllib2
+
+try:
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
+
 import hashlib
 import logging
 
@@ -74,9 +79,9 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     lpfnCB     = <void *>va_arg(args, void_ptr_type)
     va_end(args)
 
-    logging.warning("Downloading %s (%s)" % (szURL, szFileName))
+    logging.warning("Downloading %s (%s)" % (szURL.decode('utf-8'), szFileName.decode('utf-8')))
     try:
-        url = urllib2.urlopen(szURL, timeout = 10)
+        url = urllib2.urlopen(szURL.decode('utf-8'), timeout = 10)
         content = url.read()
     except:
         logging.warning("Error while downloading from %s" % (szURL, ))
@@ -527,7 +532,7 @@ cdef class Emulator:
         emu_cpu_reg32_set(emu_cpu_get(self._emu), esp, 0x0012fe98)
 
     cdef check_stop_emulation(self, c_emu_env_hook *hook):
-        return str(hook.hook.win.fnname) in ('ExitProcess', 'ExitThread', 'exit') 
+        return hook.hook.win.fnname.decode('utf-8') in ('ExitProcess', 'ExitThread', 'exit') 
 
     cpdef int test(self, steps = 1000000):
         '''
