@@ -22,6 +22,13 @@ import sys
 import getopt
 import logging
 
+#log       = logging.getLogger('pylibemu')
+#handler   = logging.StreamHandler(stream = sys.stdout)
+#formatter = logging.Formatter(datefmt = None)
+#handler.setFormatter(formatter)
+#log.addHandler(handler)
+#log.setLevel(logging.INFO)
+
 from pylibemu import Emulator 
 
 class ShellcodeTest():
@@ -50,7 +57,7 @@ class ShellcodeTest():
         self.emulator.prepare(shellcode, offset)
         self.emulator.test()
         
-        self.log.info(self.emulator.emu_profile_output)
+        self.log.info(self.emulator.emu_profile_output.decode('utf-8'))
         if self.emulator.emu_profile_truncated:
             self.log.warning("[WARNING] Emulation profile truncated")
         
@@ -61,7 +68,7 @@ class ShellcodeTest():
         self.emulator.run(shellcode)
 
         self.log.debug("Offset: %d" % (self.emulator.offset, ))
-        self.log.info(self.emulator.emu_profile_output)
+        self.log.info(self.emulator.emu_profile_output.decode('utf-8'))
         if self.emulator.emu_profile_truncated:
             self.log.warning("[WARNING] Emulation profile truncated")
 
@@ -1585,7 +1592,7 @@ class ShellcodeTest():
 
 
 def usage():
-    print """
+    sys.stdout.write("""
 Pylibemu test suite
 
 Usage:
@@ -1596,7 +1603,7 @@ Usage:
         -s <shellcode>, --shellcode=<shellcode>   Execute the selected shellcode test (0 means 'all tests')
         -i <shellcode>, --info=<shellcode>        Shows information about the selected shellcode test
     
-"""
+""")
     sys.exit(0)
 
 if __name__ == '__main__':
@@ -1627,6 +1634,6 @@ if __name__ == '__main__':
             info = True
 
     if info:
-        print f.__doc__
+        sys.stdout.write(f.__doc__ + '\n')
     if execute:
         f()
