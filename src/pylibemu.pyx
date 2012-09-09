@@ -510,6 +510,7 @@ cdef class Emulator:
         emu_memory_write_dword(_mem, 0x00e000de, 4711)
         emu_memory_write_dword(_mem, 0x01001265, 4711)
         emu_memory_write_dword(_mem, 0x8a000066, 4711)
+        emu_memory_write_dword(_mem, 0x7c80ffec, 0xc330408b)
 
         # Set the flags
         emu_cpu_eflags_set(_cpu, 0)
