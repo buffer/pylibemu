@@ -83,7 +83,7 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
 
     logging.warning("Downloading %s (%s)" % (szURL.decode('utf-8'), szFileName.decode('utf-8')))
     try:
-        url = urllib2.urlopen(szURL.decode('utf-8'), timeout = 10)
+        url     = urllib2.urlopen(szURL.decode('utf-8'), timeout = 10)
         content = url.read()
     except:
         logging.warning("Error while downloading from %s" % (szURL, ))
@@ -432,9 +432,11 @@ cdef class Emulator:
     cdef EmuProfile emu_profile
     cdef int32_t    _offset
     cdef size_t     output_size
+    cdef bint       enable_hooks
 
-    def __cinit__(self, output_size = OUTPUT_SIZE):
-        self.output_size = output_size
+    def __cinit__(self, output_size = OUTPUT_SIZE, enable_hooks = True):
+        self.output_size  = output_size
+        self.enable_hooks = enable_hooks
         self.new()
 
     def __dealloc__(self):
@@ -570,11 +572,12 @@ cdef class Emulator:
         emu_memory_write_dword(_mem, 0x7c80ada0, 0x51ec8b55)
         emu_memory_write_byte(_mem,  0x7c814eeb, 0xc3)
 
-        emu_env_w32_export_hook(_env, "ExitProcess", ExitProcess,  NULL)
-        emu_env_w32_export_hook(_env, "ExitThread", ExitThread, NULL)
-
         emu_env_w32_load_dll(_env.env.win, "urlmon.dll")
-        emu_env_w32_export_hook(_env, "URLDownloadToFileA", URLDownloadToFile,  NULL)
+
+        if self.enable_hooks:
+            emu_env_w32_export_hook(_env, "ExitProcess", ExitProcess,  NULL)
+            emu_env_w32_export_hook(_env, "ExitThread", ExitThread, NULL)
+            emu_env_w32_export_hook(_env, "URLDownloadToFileA", URLDownloadToFile,  NULL)
 
         eipsave = 0
         ret     = 0
