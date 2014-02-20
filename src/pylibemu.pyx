@@ -610,7 +610,7 @@ cdef class Emulator:
         self.emu_profile.emu_profile_debug(_env)
         return 0
 
-    cpdef int run(self, shellcode):
+    cpdef int run(self, shellcode, steps = 1000000):
         cdef int32_t offset
 
         offset = self.shellcode_getpc_test(shellcode)
@@ -618,7 +618,7 @@ cdef class Emulator:
             offset = 0
 
         self.prepare(shellcode, offset)
-        return self.test()
+        return self.test(steps = steps)
 
     @property
     def offset(self):
