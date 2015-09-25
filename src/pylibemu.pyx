@@ -608,6 +608,7 @@ cdef class Emulator:
                     break
 
         self.emu_profile.emu_profile_debug(_env)
+        emu_env_free(_env)
         return 0
 
     cpdef int run(self, shellcode, steps = 1000000):
@@ -1233,6 +1234,8 @@ cdef class Emulator:
             raise RuntimeError('Emulator environment error')
 
         if emu_env_w32_eip_check(_env) is NULL:
+            emu_env_free(_env)
             return False
 
+        emu_env_free(_env)
         return True
