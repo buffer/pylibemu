@@ -1136,7 +1136,10 @@ cdef class Emulator:
         if emu_memory_read_block(_mem, addr, block, _len):
             raise RuntimeError("Error while reading a dword at address 0x%x" % (addr, ))
 
-        return <char *>block
+        data = (<char *>block)
+        free(block)
+
+        return data
 
     def memory_read_string(self, uint32_t addr, uint32_t maxsize):
         ''' 
@@ -1161,9 +1164,13 @@ cdef class Emulator:
 
         _mem = emu_memory_get(self._emu)
         if emu_memory_read_string(_mem, addr, &s, maxsize):
+            free(s.data)
             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
 
-        return <char *>s.data
+        data = (<char *>s.data)
+        free(s.data)
+
+        return data
 
     def memory_segment_select(self, c_emu_segment segment):
         '''  
@@ -1239,3 +1246,4 @@ cdef class Emulator:
 
         emu_env_free(_env)
         return True
+

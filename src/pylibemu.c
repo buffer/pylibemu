@@ -9519,6 +9519,7 @@ static PyObject *__pyx_pw_8pylibemu_8Emulator_69memory_read_block(PyObject *__py
 static PyObject *__pyx_pf_8pylibemu_8Emulator_68memory_read_block(struct __pyx_obj_8pylibemu_Emulator *__pyx_v_self, uint32_t __pyx_v_addr, size_t __pyx_v__len) {
   struct emu_memory *__pyx_v__mem;
   void *__pyx_v_block;
+  char *__pyx_v_data;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -9610,7 +9611,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_68memory_read_block(struct __pyx_o
  *         if emu_memory_read_block(_mem, addr, block, _len):
  *             raise RuntimeError("Error while reading a dword at address 0x%x" % (addr, ))             # <<<<<<<<<<<<<<
  * 
- *         return <char *>block
+ *         data = (<char *>block)
  */
     __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_v_addr); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1137; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
@@ -9638,12 +9639,30 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_68memory_read_block(struct __pyx_o
   /* "pylibemu.pyx":1139
  *             raise RuntimeError("Error while reading a dword at address 0x%x" % (addr, ))
  * 
- *         return <char *>block             # <<<<<<<<<<<<<<
+ *         data = (<char *>block)             # <<<<<<<<<<<<<<
+ *         free(block)
+ * 
+ */
+  __pyx_v_data = ((char *)__pyx_v_block);
+
+  /* "pylibemu.pyx":1140
+ * 
+ *         data = (<char *>block)
+ *         free(block)             # <<<<<<<<<<<<<<
+ * 
+ *         return data
+ */
+  free(__pyx_v_block);
+
+  /* "pylibemu.pyx":1142
+ *         free(block)
+ * 
+ *         return data             # <<<<<<<<<<<<<<
  * 
  *     def memory_read_string(self, uint32_t addr, uint32_t maxsize):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyBytes_FromString(((char *)__pyx_v_block)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1139; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_data); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -9669,8 +9688,8 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_68memory_read_block(struct __pyx_o
   return __pyx_r;
 }
 
-/* "pylibemu.pyx":1141
- *         return <char *>block
+/* "pylibemu.pyx":1144
+ *         return data
  * 
  *     def memory_read_string(self, uint32_t addr, uint32_t maxsize):             # <<<<<<<<<<<<<<
  *         '''
@@ -9709,11 +9728,11 @@ static PyObject *__pyx_pw_8pylibemu_8Emulator_71memory_read_string(PyObject *__p
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_maxsize)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("memory_read_string", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1141; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("memory_read_string", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1144; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "memory_read_string") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1141; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "memory_read_string") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1144; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -9721,12 +9740,12 @@ static PyObject *__pyx_pw_8pylibemu_8Emulator_71memory_read_string(PyObject *__p
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_addr = __Pyx_PyInt_As_uint32_t(values[0]); if (unlikely((__pyx_v_addr == (uint32_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1141; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_maxsize = __Pyx_PyInt_As_uint32_t(values[1]); if (unlikely((__pyx_v_maxsize == (uint32_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1141; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_addr = __Pyx_PyInt_As_uint32_t(values[0]); if (unlikely((__pyx_v_addr == (uint32_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1144; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_maxsize = __Pyx_PyInt_As_uint32_t(values[1]); if (unlikely((__pyx_v_maxsize == (uint32_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1144; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("memory_read_string", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1141; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("memory_read_string", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1144; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("pylibemu.Emulator.memory_read_string", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -9742,6 +9761,7 @@ static PyObject *__pyx_pw_8pylibemu_8Emulator_71memory_read_string(PyObject *__p
 static PyObject *__pyx_pf_8pylibemu_8Emulator_70memory_read_string(struct __pyx_obj_8pylibemu_Emulator *__pyx_v_self, uint32_t __pyx_v_addr, uint32_t __pyx_v_maxsize) {
   struct emu_memory *__pyx_v__mem;
   struct emu_string __pyx_v_s;
+  char *__pyx_v_data;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -9752,7 +9772,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_70memory_read_string(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("memory_read_string", 0);
 
-  /* "pylibemu.pyx":1159
+  /* "pylibemu.pyx":1162
  *         cdef c_emu_string s
  * 
  *         if self._emu is NULL:             # <<<<<<<<<<<<<<
@@ -9762,85 +9782,112 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_70memory_read_string(struct __pyx_
   __pyx_t_1 = ((__pyx_v_self->_emu == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1160
+    /* "pylibemu.pyx":1163
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _mem = emu_memory_get(self._emu)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__35, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__35, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "pylibemu.pyx":1162
+  /* "pylibemu.pyx":1165
  *             raise RuntimeError('Emulator not initialized')
  * 
  *         _mem = emu_memory_get(self._emu)             # <<<<<<<<<<<<<<
  *         if emu_memory_read_string(_mem, addr, &s, maxsize):
- *             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
+ *             free(s.data)
  */
   __pyx_v__mem = emu_memory_get(__pyx_v_self->_emu);
 
-  /* "pylibemu.pyx":1163
+  /* "pylibemu.pyx":1166
  * 
  *         _mem = emu_memory_get(self._emu)
  *         if emu_memory_read_string(_mem, addr, &s, maxsize):             # <<<<<<<<<<<<<<
+ *             free(s.data)
  *             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
- * 
  */
   __pyx_t_1 = (emu_memory_read_string(__pyx_v__mem, __pyx_v_addr, (&__pyx_v_s), __pyx_v_maxsize) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1164
+    /* "pylibemu.pyx":1167
  *         _mem = emu_memory_get(self._emu)
  *         if emu_memory_read_string(_mem, addr, &s, maxsize):
+ *             free(s.data)             # <<<<<<<<<<<<<<
+ *             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
+ * 
+ */
+    free(__pyx_v_s.data);
+
+    /* "pylibemu.pyx":1168
+ *         if emu_memory_read_string(_mem, addr, &s, maxsize):
+ *             free(s.data)
  *             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))             # <<<<<<<<<<<<<<
  * 
- *         return <char *>s.data
+ *         data = (<char *>s.data)
  */
-    __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_v_addr); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyInt_From_uint32_t(__pyx_v_addr); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Error_while_reading_a_string_at, __pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Error_while_reading_a_string_at, __pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "pylibemu.pyx":1166
+  /* "pylibemu.pyx":1170
  *             raise RuntimeError("Error while reading a string at address 0x%x" % (addr, ))
  * 
- *         return <char *>s.data             # <<<<<<<<<<<<<<
+ *         data = (<char *>s.data)             # <<<<<<<<<<<<<<
+ *         free(s.data)
+ * 
+ */
+  __pyx_v_data = ((char *)__pyx_v_s.data);
+
+  /* "pylibemu.pyx":1171
+ * 
+ *         data = (<char *>s.data)
+ *         free(s.data)             # <<<<<<<<<<<<<<
+ * 
+ *         return data
+ */
+  free(__pyx_v_s.data);
+
+  /* "pylibemu.pyx":1173
+ *         free(s.data)
+ * 
+ *         return data             # <<<<<<<<<<<<<<
  * 
  *     def memory_segment_select(self, c_emu_segment segment):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyBytes_FromString(((char *)__pyx_v_s.data)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyBytes_FromString(__pyx_v_data); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "pylibemu.pyx":1141
- *         return <char *>block
+  /* "pylibemu.pyx":1144
+ *         return data
  * 
  *     def memory_read_string(self, uint32_t addr, uint32_t maxsize):             # <<<<<<<<<<<<<<
  *         '''
@@ -9859,8 +9906,8 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_70memory_read_string(struct __pyx_
   return __pyx_r;
 }
 
-/* "pylibemu.pyx":1168
- *         return <char *>s.data
+/* "pylibemu.pyx":1175
+ *         return data
  * 
  *     def memory_segment_select(self, c_emu_segment segment):             # <<<<<<<<<<<<<<
  *         '''
@@ -9879,7 +9926,7 @@ static PyObject *__pyx_pw_8pylibemu_8Emulator_73memory_segment_select(PyObject *
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("memory_segment_select (wrapper)", 0);
   assert(__pyx_arg_segment); {
-    __pyx_v_segment = ((enum emu_segment)PyInt_AsLong(__pyx_arg_segment)); if (unlikely(PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1168; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_segment = ((enum emu_segment)PyInt_AsLong(__pyx_arg_segment)); if (unlikely(PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1175; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -9905,7 +9952,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_72memory_segment_select(struct __p
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("memory_segment_select", 0);
 
-  /* "pylibemu.pyx":1185
+  /* "pylibemu.pyx":1192
  *         cdef c_emu_memory *_mem
  * 
  *         if self._emu is NULL:             # <<<<<<<<<<<<<<
@@ -9915,21 +9962,21 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_72memory_segment_select(struct __p
   __pyx_t_1 = ((__pyx_v_self->_emu == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1186
+    /* "pylibemu.pyx":1193
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _mem = emu_memory_get(self._emu)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__36, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__36, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "pylibemu.pyx":1188
+  /* "pylibemu.pyx":1195
  *             raise RuntimeError('Emulator not initialized')
  * 
  *         _mem = emu_memory_get(self._emu)             # <<<<<<<<<<<<<<
@@ -9938,7 +9985,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_72memory_segment_select(struct __p
  */
   __pyx_v__mem = emu_memory_get(__pyx_v_self->_emu);
 
-  /* "pylibemu.pyx":1189
+  /* "pylibemu.pyx":1196
  * 
  *         _mem = emu_memory_get(self._emu)
  *         emu_memory_segment_select(_mem, segment)             # <<<<<<<<<<<<<<
@@ -9947,8 +9994,8 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_72memory_segment_select(struct __p
  */
   emu_memory_segment_select(__pyx_v__mem, __pyx_v_segment);
 
-  /* "pylibemu.pyx":1168
- *         return <char *>s.data
+  /* "pylibemu.pyx":1175
+ *         return data
  * 
  *     def memory_segment_select(self, c_emu_segment segment):             # <<<<<<<<<<<<<<
  *         '''
@@ -9968,7 +10015,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_72memory_segment_select(struct __p
   return __pyx_r;
 }
 
-/* "pylibemu.pyx":1191
+/* "pylibemu.pyx":1198
  *         emu_memory_segment_select(_mem, segment)
  * 
  *     def memory_segment_get(self):             # <<<<<<<<<<<<<<
@@ -10001,7 +10048,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_74memory_segment_get(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("memory_segment_get", 0);
 
-  /* "pylibemu.pyx":1208
+  /* "pylibemu.pyx":1215
  *         cdef c_emu_memory *_mem
  * 
  *         if self._emu is NULL:             # <<<<<<<<<<<<<<
@@ -10011,21 +10058,21 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_74memory_segment_get(struct __pyx_
   __pyx_t_1 = ((__pyx_v_self->_emu == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1209
+    /* "pylibemu.pyx":1216
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _mem = emu_memory_get(self._emu)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__37, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__37, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "pylibemu.pyx":1211
+  /* "pylibemu.pyx":1218
  *             raise RuntimeError('Emulator not initialized')
  * 
  *         _mem = emu_memory_get(self._emu)             # <<<<<<<<<<<<<<
@@ -10034,7 +10081,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_74memory_segment_get(struct __pyx_
  */
   __pyx_v__mem = emu_memory_get(__pyx_v_self->_emu);
 
-  /* "pylibemu.pyx":1212
+  /* "pylibemu.pyx":1219
  * 
  *         _mem = emu_memory_get(self._emu)
  *         return emu_memory_segment_get(_mem)             # <<<<<<<<<<<<<<
@@ -10042,13 +10089,13 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_74memory_segment_get(struct __pyx_
  *     # Win32 environment
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyInt_FromLong(emu_memory_segment_get(__pyx_v__mem)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyInt_FromLong(emu_memory_segment_get(__pyx_v__mem)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1219; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "pylibemu.pyx":1191
+  /* "pylibemu.pyx":1198
  *         emu_memory_segment_select(_mem, segment)
  * 
  *     def memory_segment_get(self):             # <<<<<<<<<<<<<<
@@ -10067,7 +10114,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_74memory_segment_get(struct __pyx_
   return __pyx_r;
 }
 
-/* "pylibemu.pyx":1215
+/* "pylibemu.pyx":1222
  * 
  *     # Win32 environment
  *     def env_w32_hook_check(self):             # <<<<<<<<<<<<<<
@@ -10100,7 +10147,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("env_w32_hook_check", 0);
 
-  /* "pylibemu.pyx":1228
+  /* "pylibemu.pyx":1235
  *         cdef c_emu_env      *_env
  * 
  *         if self._emu is NULL:             # <<<<<<<<<<<<<<
@@ -10110,21 +10157,21 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
   __pyx_t_1 = ((__pyx_v_self->_emu == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1229
+    /* "pylibemu.pyx":1236
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _env = emu_env_new(self._emu)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__38, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1229; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__38, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1236; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1229; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1236; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "pylibemu.pyx":1231
+  /* "pylibemu.pyx":1238
  *             raise RuntimeError('Emulator not initialized')
  * 
  *         _env = emu_env_new(self._emu)             # <<<<<<<<<<<<<<
@@ -10133,7 +10180,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
  */
   __pyx_v__env = emu_env_new(__pyx_v_self->_emu);
 
-  /* "pylibemu.pyx":1232
+  /* "pylibemu.pyx":1239
  * 
  *         _env = emu_env_new(self._emu)
  *         if _env is NULL:             # <<<<<<<<<<<<<<
@@ -10143,33 +10190,33 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
   __pyx_t_1 = ((__pyx_v__env == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1233
+    /* "pylibemu.pyx":1240
  *         _env = emu_env_new(self._emu)
  *         if _env is NULL:
  *             print emu_strerror(self._emu)             # <<<<<<<<<<<<<<
  *             raise RuntimeError('Emulator environment error')
  * 
  */
-    __pyx_t_2 = __Pyx_PyBytes_FromString(emu_strerror(__pyx_v_self->_emu)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1233; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyBytes_FromString(emu_strerror(__pyx_v_self->_emu)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1240; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_PrintOne(0, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1233; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_PrintOne(0, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1240; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "pylibemu.pyx":1234
+    /* "pylibemu.pyx":1241
  *         if _env is NULL:
  *             print emu_strerror(self._emu)
  *             raise RuntimeError('Emulator environment error')             # <<<<<<<<<<<<<<
  * 
  *         if emu_env_w32_eip_check(_env) is NULL:
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__39, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1234; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__39, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1234; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "pylibemu.pyx":1236
+  /* "pylibemu.pyx":1243
  *             raise RuntimeError('Emulator environment error')
  * 
  *         if emu_env_w32_eip_check(_env) is NULL:             # <<<<<<<<<<<<<<
@@ -10179,7 +10226,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
   __pyx_t_1 = ((emu_env_w32_eip_check(__pyx_v__env) == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "pylibemu.pyx":1237
+    /* "pylibemu.pyx":1244
  * 
  *         if emu_env_w32_eip_check(_env) is NULL:
  *             emu_env_free(_env)             # <<<<<<<<<<<<<<
@@ -10188,7 +10235,7 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
  */
     emu_env_free(__pyx_v__env);
 
-    /* "pylibemu.pyx":1238
+    /* "pylibemu.pyx":1245
  *         if emu_env_w32_eip_check(_env) is NULL:
  *             emu_env_free(_env)
  *             return False             # <<<<<<<<<<<<<<
@@ -10201,25 +10248,27 @@ static PyObject *__pyx_pf_8pylibemu_8Emulator_76env_w32_hook_check(struct __pyx_
     goto __pyx_L0;
   }
 
-  /* "pylibemu.pyx":1240
+  /* "pylibemu.pyx":1247
  *             return False
  * 
  *         emu_env_free(_env)             # <<<<<<<<<<<<<<
  *         return True
+ * 
  */
   emu_env_free(__pyx_v__env);
 
-  /* "pylibemu.pyx":1241
+  /* "pylibemu.pyx":1248
  * 
  *         emu_env_free(_env)
  *         return True             # <<<<<<<<<<<<<<
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(Py_True);
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "pylibemu.pyx":1215
+  /* "pylibemu.pyx":1222
  * 
  *     # Win32 environment
  *     def env_w32_hook_check(self):             # <<<<<<<<<<<<<<
@@ -10966,58 +11015,58 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__34);
   __Pyx_GIVEREF(__pyx_tuple__34);
 
-  /* "pylibemu.pyx":1160
+  /* "pylibemu.pyx":1163
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _mem = emu_memory_get(self._emu)
  */
-  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__35);
   __Pyx_GIVEREF(__pyx_tuple__35);
 
-  /* "pylibemu.pyx":1186
+  /* "pylibemu.pyx":1193
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _mem = emu_memory_get(self._emu)
  */
-  __pyx_tuple__36 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__36 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__36);
   __Pyx_GIVEREF(__pyx_tuple__36);
 
-  /* "pylibemu.pyx":1209
+  /* "pylibemu.pyx":1216
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _mem = emu_memory_get(self._emu)
  */
-  __pyx_tuple__37 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__37)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__37 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__37)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__37);
   __Pyx_GIVEREF(__pyx_tuple__37);
 
-  /* "pylibemu.pyx":1229
+  /* "pylibemu.pyx":1236
  * 
  *         if self._emu is NULL:
  *             raise RuntimeError('Emulator not initialized')             # <<<<<<<<<<<<<<
  * 
  *         _env = emu_env_new(self._emu)
  */
-  __pyx_tuple__38 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__38)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1229; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__38 = PyTuple_Pack(1, __pyx_kp_s_Emulator_not_initialized); if (unlikely(!__pyx_tuple__38)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1236; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__38);
   __Pyx_GIVEREF(__pyx_tuple__38);
 
-  /* "pylibemu.pyx":1234
+  /* "pylibemu.pyx":1241
  *         if _env is NULL:
  *             print emu_strerror(self._emu)
  *             raise RuntimeError('Emulator environment error')             # <<<<<<<<<<<<<<
  * 
  *         if emu_env_w32_eip_check(_env) is NULL:
  */
-  __pyx_tuple__39 = PyTuple_Pack(1, __pyx_kp_s_Emulator_environment_error); if (unlikely(!__pyx_tuple__39)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1234; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__39 = PyTuple_Pack(1, __pyx_kp_s_Emulator_environment_error); if (unlikely(!__pyx_tuple__39)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
   __Pyx_RefNannyFinishContext();
