@@ -7,9 +7,9 @@ sourcefiles  = ['src/pylibemu.c']
 setup(
     name         = "pylibemu",
     packages     = [],
-    version      = "0.2.6",
+    version      = "0.3",
     description  = "Libemu Python wrapper",
-    url          = "",
+    url          = "https://github.com/buffer/pylibemu",
     author       = "Angelo Dell'Aera",
     author_email = "angelo.dellaera@honeynet.org",
     classifiers  = [
