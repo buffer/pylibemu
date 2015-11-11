@@ -19,7 +19,7 @@
 
 cimport pylibemu
 
-__version__ = '0.2.6'
+__version__ = '0.3.3'
 
 import sys
 import socket
