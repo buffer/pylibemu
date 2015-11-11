@@ -1,30 +1,28 @@
 
-Pylibemu
-========
+## Pylibemu
 
-Pylibemu is a wrapper for the Libemu library (http://libemu.carnivore.it).
+Pylibemu is a wrapper for the Libemu library (https://github.com/buffer/libemu).
 
 
-Requirements
-============
+## Requirements
 
 - Python 2.5 or later
 - Libemu
 
 
-Installation
-============
+## Installation
 
-Pylibemu uses setuptools (http://peak.telecommunity.com/DevCenter/setuptools)
+To install Pylibemu, just execute:
 
-To install Pylibemu, just do:
+$ sudo pip install pylibemu
+
+or alternatively
 
 $ python setup.py build
 $ sudo python setup.py install
 
 
-Usage
-=====
+## Usage
 
 
 buffer@alnitak ~ $ python
@@ -164,11 +162,10 @@ shellcode emulation test, increase the reserved memory through the Emulator `set
 method and subsequently run the shellcode emulation test again as shown above.
 
 
-License information
-===================
+## License information
 
 Copyright (C) 2011-2015 Angelo Dell'Aera <buffer@antifork.org>
 
-License: GNU General Public License, version 2 or later; see COPYING.txt
+License: GNU General Public License, version 2 or later; see LICENSE.txt
          included in this archive for details.
 
