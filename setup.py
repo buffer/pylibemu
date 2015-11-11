@@ -10,7 +10,7 @@ setup(
     version          = "0.3.1",
     description      = "Libemu Python wrapper",
     url              = "https://github.com/buffer/pylibemu",
-    download_url     = "https://github.com/buffer/pylibemu/archive/v0.3.1.tar.gz"
+    download_url     = "https://github.com/buffer/pylibemu/archive/v0.3.1.tar.gz",
     author           = "Angelo Dell'Aera",
     author_email     = "angelo.dellaera@honeynet.org",
     maintainer       = "Angelo Dell'Aera",
