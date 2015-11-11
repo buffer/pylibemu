@@ -24,7 +24,6 @@ $ sudo python setup.py install
 
 ## Usage
 
-.. code-block:: sh
 
 	buffer@alnitak ~ $ python
 	Python 2.6.6 (r266:84292, Feb 26 2011, 12:20:05) 
@@ -93,11 +92,10 @@ $ sudo python setup.py install
 	False
 
 
-The new Emulator method `run' was introduced in Pylibemu 0.1.3  which allows not to 
+The new Emulator method 'run' was introduced in Pylibemu 0.1.3  which allows not to 
 worry about details. Moreover the new Emulator attribute `offset' allows to get such
 information if needed. 
  
-.. code-block:: sh
 
 	>>> emulator = pylibemu.Emulator()
 	>>> emulator.run(shellcode)
@@ -146,11 +144,9 @@ information if needed.
 	False
 
 
-The Emulator accepts the optional parameter `output_size' which defines how much memory 
+The Emulator accepts the optional parameter 'output_size' which defines how much memory 
 will be reserved for storing the emulation profile dump. By default, its size is 1MB but 
 it be can changed in two possible ways
-
-.. code-block:: sh
 
 	>>> emulator = pylibemu.Emulator(1024)
 
@@ -158,11 +154,11 @@ it be can changed in two possible ways
 	>>> emulator.set_output_size(1024)
 
 If the reserved memory is not enough to contain the entire dump, the dump will be truncated 
-and the Emulator attribute `emu_profile_truncated' will be set to True. This approach is 
+and the Emulator attribute 'emu_profile_truncated' will be set to True. This approach is 
 needed in order not to penalize performances while analyzing some shellcodes which may produce 
 several MBs dumps (such as the Metasploit windows/download_exec). If the entire dump is needed 
 a really simple approach could be to check the `emu_profile_truncated' attribute after the 
-shellcode emulation test, increase the reserved memory through the Emulator `set_output_size' 
+shellcode emulation test, increase the reserved memory through the Emulator 'set_output_size' 
 method and subsequently run the shellcode emulation test again as shown above.
 
 
