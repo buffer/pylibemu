@@ -164,7 +164,7 @@ method and subsequently run the shellcode emulation test again as shown above.
 
 ## License information
 
-Copyright (C) 2011-2015 Angelo Dell'Aera <buffer@antifork.org>
+Copyright (C) 2011-2016 Angelo Dell'Aera <buffer@antifork.org>
 
 License: GNU General Public License, version 2 or later; see LICENSE.txt
          included in this archive for details.
