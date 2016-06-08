@@ -14,13 +14,11 @@ Pylibemu is a wrapper for the Libemu library (https://github.com/buffer/libemu).
 
 To install Pylibemu, just execute:
 
-$ sudo pip install pylibemu
+	$ sudo pip install pylibemu
 
 or alternatively
 
-$ python setup.py build
-$ sudo python setup.py install
-
+	$ sudo python setup.py install
 
 ## Usage
 
