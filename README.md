@@ -18,6 +18,7 @@ To install Pylibemu, just execute:
 
 or alternatively
 
+	$ git clone --recursive https://github.com/buffer/pylibemu.git
 	$ sudo python setup.py install
 
 ## Usage
