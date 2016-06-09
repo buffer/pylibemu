@@ -219,7 +219,7 @@ setup(
         "Development Status :: 3 - Alpha",
         "Environment :: Console",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+        "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: Unix",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Security",
