@@ -206,7 +206,7 @@ cmdclass    = {'build_clib' : build_external_clib}
 setup(
     name             = "pylibemu",
     packages         = [],
-    version          = "0.5",
+    version          = "0.5.1",
     description      = "Libemu Python wrapper",
     url              = "https://github.com/buffer/pylibemu",
     download_url     = "https://github.com/buffer/pylibemu/archive/v0.5.tar.gz",
