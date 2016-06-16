@@ -1,13 +1,18 @@
 
-Pylibemu |landscape badge|
-==========================
+Pylibemu  |travis badge| |landscape badge| |downloads badge| |version badge|
+=======================
 
+.. |travis badge| image:: https://img.shields.io/travis/buffer/pylibemu/master.svg
+   :target: https://travis-ci.org/buffer/pylibemu
 .. |landscape badge| image:: https://landscape.io/github/buffer/pylibemu/master/landscape.png
    :target: https://landscape.io/github/buffer/pylibemu/master
    :alt: Code Health
+.. |downloads badge| image:: https://img.shields.io/pypi/dm/pylibemu.svg
+   :target: https://pypi.python.org/pypi/pylibemu/
+.. |version badge| image:: https://img.shields.io/pypi/v/pylibemu.svg
+   :target: https://pypi.python.org/pypi/pylibemu/
 
 Pylibemu is a wrapper for the Libemu library (https://github.com/buffer/libemu).
-
 
 Requirements
 ============
