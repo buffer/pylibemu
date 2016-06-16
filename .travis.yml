@@ -8,8 +8,7 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
-
 before_install:
   - git submodule update --init --recursive
 install:
-  - pip install pylibemu
+  - sudo python setup.py install
