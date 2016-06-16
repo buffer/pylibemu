@@ -12,3 +12,5 @@ before_install:
   - git submodule update --init --recursive
 install:
   - sudo python setup.py install
+script:
+  - echo "Build done"
