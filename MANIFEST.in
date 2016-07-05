@@ -1,2 +1,3 @@
 include LICENSE.txt
+include run_pykg_config.py
 recursive-include docs *.html *.css *.png *.gif
