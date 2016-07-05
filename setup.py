@@ -84,8 +84,8 @@ class build_external_clib(build_clib):
 
         for lib_name, build_info in self.libraries:
             if 'sources' not in build_info:
-                log.info("running 'autoreconf -v -i' for library '%s'", lib_name)
-                check_call(['autoreconf', '-v', '-i'], cwd = build_info['local_source'], env = env)
+                log.info("running 'autoreconf -v -i -f' for library '%s'", lib_name)
+                check_call(['autoreconf', '-v', '-i', '-f'], cwd = build_info['local_source'], env = env)
 
     def build_library(self, library, pkg_config_name, local_source = None, supports_non_srcdir_builds = True, prefix = None):
         log.info("checking if library '%s' is installed", library)
@@ -206,10 +206,10 @@ cmdclass    = {'build_clib' : build_external_clib}
 setup(
     name             = "pylibemu",
     packages         = [],
-    version          = "0.5.5",
+    version          = "0.5.6",
     description      = "Libemu Python wrapper",
     url              = "https://github.com/buffer/pylibemu",
-    download_url     = "https://github.com/buffer/pylibemu/archive/v0.5.5.tar.gz",
+    download_url     = "https://github.com/buffer/pylibemu/archive/v0.5.6.tar.gz",
     author           = "Angelo Dell'Aera",
     author_email     = "angelo.dellaera@honeynet.org",
     maintainer       = "Angelo Dell'Aera",
