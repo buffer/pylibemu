@@ -1,33 +1,47 @@
 
-## Pylibemu
+Pylibemu  |travis badge| |landscape badge| |downloads badge| |version badge|
+=======================
+
+.. |travis badge| image:: https://img.shields.io/travis/buffer/pylibemu/master.svg
+   :target: https://travis-ci.org/buffer/pylibemu
+.. |landscape badge| image:: https://landscape.io/github/buffer/pylibemu/master/landscape.png
+   :target: https://landscape.io/github/buffer/pylibemu/master
+   :alt: Code Health
+.. |downloads badge| image:: https://img.shields.io/pypi/dm/pylibemu.svg
+   :target: https://pypi.python.org/pypi/pylibemu/
+.. |version badge| image:: https://img.shields.io/pypi/v/pylibemu.svg
+   :target: https://pypi.python.org/pypi/pylibemu/
 
 Pylibemu is a wrapper for the Libemu library (https://github.com/buffer/libemu).
 
-
-## Requirements
+Requirements
+============
 
 - Python 2.5 or later
 - Libemu
 
 
-## Installation
+Installation
+============
 
 To install Pylibemu, just execute:
+
+.. code-block:: console
 
 	$ sudo pip install pylibemu
 
 or alternatively
 
+.. code-block:: console
+
 	$ git clone --recursive https://github.com/buffer/pylibemu.git
 	$ sudo python setup.py install
 
-## Usage
+Usage
+=====
 
+.. code-block:: pycon
 
-	buffer@alnitak ~ $ python
-	Python 2.6.6 (r266:84292, Feb 26 2011, 12:20:05) 
-	[GCC 4.4.4] on linux2
-	Type "help", "copyright", "credits" or "license" for more information.
 	>>> import pylibemu
 	>>> shellcode  = b"\xfc\x6a\xeb\x47\xe8\xf9\xff\xff\xff\x60\x31\xdb\x8b\x7d"
 	>>> shellcode += b"\x3c\x8b\x7c\x3d\x78\x01\xef\x8b\x57\x20\x01\xea\x8b\x34"
@@ -92,9 +106,10 @@ or alternatively
 
 
 The new Emulator method 'run' was introduced in Pylibemu 0.1.3  which allows not to 
-worry about details. Moreover the new Emulator attribute `offset' allows to get such
+worry about details. Moreover the new Emulator attribute ``offset`` allows to get such
 information if needed. 
  
+.. code-block:: pycon
 
 	>>> emulator = pylibemu.Emulator()
 	>>> emulator.run(shellcode)
@@ -143,9 +158,11 @@ information if needed.
 	False
 
 
-The Emulator accepts the optional parameter 'output_size' which defines how much memory 
+The Emulator accepts the optional parameter ``output_size`` which defines how much memory 
 will be reserved for storing the emulation profile dump. By default, its size is 1MB but 
 it be can changed in two possible ways
+
+.. code-block:: pycon
 
 	>>> emulator = pylibemu.Emulator(1024)
 
@@ -153,18 +170,17 @@ it be can changed in two possible ways
 	>>> emulator.set_output_size(1024)
 
 If the reserved memory is not enough to contain the entire dump, the dump will be truncated 
-and the Emulator attribute 'emu_profile_truncated' will be set to True. This approach is 
+and the Emulator attribute ``emu_profile_truncated`` will be set to True. This approach is 
 needed in order not to penalize performances while analyzing some shellcodes which may produce 
 several MBs dumps (such as the Metasploit windows/download_exec). If the entire dump is needed 
-a really simple approach could be to check the `emu_profile_truncated' attribute after the 
-shellcode emulation test, increase the reserved memory through the Emulator 'set_output_size' 
+a really simple approach could be to check the ``emu_profile_truncated`` attribute after the 
+shellcode emulation test, increase the reserved memory through the Emulator ``set_output_size`` 
 method and subsequently run the shellcode emulation test again as shown above.
 
 
-## License information
+License information
+===================
 
 Copyright (C) 2011-2016 Angelo Dell'Aera <buffer@antifork.org>
 
-License: GNU General Public License, version 2; see LICENSE.txt
-         included in this archive for details.
-
+License: GNU General Public License, version 2
