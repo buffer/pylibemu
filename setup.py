@@ -206,10 +206,10 @@ cmdclass    = {'build_clib' : build_external_clib}
 setup(
     name             = "pylibemu",
     packages         = [],
-    version          = "0.5.4",
+    version          = "0.5.5",
     description      = "Libemu Python wrapper",
     url              = "https://github.com/buffer/pylibemu",
-    download_url     = "https://github.com/buffer/pylibemu/archive/v0.5.tar.gz",
+    download_url     = "https://github.com/buffer/pylibemu/archive/v0.5.5.tar.gz",
     author           = "Angelo Dell'Aera",
     author_email     = "angelo.dellaera@honeynet.org",
     maintainer       = "Angelo Dell'Aera",
