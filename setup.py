@@ -1,6 +1,7 @@
 import os
 import fnmatch
 import shlex
+import errno
 from subprocess import check_call
 from subprocess import check_output
 from subprocess import CalledProcessError
