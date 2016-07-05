@@ -84,10 +84,8 @@ class build_external_clib(build_clib):
 
         for lib_name, build_info in self.libraries:
             if 'sources' not in build_info:
-                log.info("checking if configure script for library '%s' exists", lib_name)
-                if not os.path.exists(os.path.join(build_info['local_source'], 'configure')):
-                    log.info("running 'autoreconf -v -i' for library '%s'", lib_name)
-                    check_call(['autoreconf', '-v', '-i'], cwd = build_info['local_source'], env = env)
+                log.info("running 'autoreconf -v -i' for library '%s'", lib_name)
+                check_call(['autoreconf', '-v', '-i'], cwd = build_info['local_source'], env = env)
 
     def build_library(self, library, pkg_config_name, local_source = None, supports_non_srcdir_builds = True, prefix = None):
         log.info("checking if library '%s' is installed", library)
