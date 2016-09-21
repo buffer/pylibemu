@@ -186,8 +186,8 @@ class build_external_clib(build_clib):
                         self.build_args[key].extend(value)
                     else:
                         self.build_args[key] = value
-            if ldconf:
-                conf = ldconf['conf']
+
+            if ldconf and os.access(ldconf['conf'], os.W_OK):
                 with open(ldconf['conf'], 'w') as f:
                     f.write(ldconf['path'])
 
