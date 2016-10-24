@@ -1005,7 +1005,7 @@ static char __pyx_k_open[] = "open";
 static char __pyx_k_read[] = "read";
 static char __pyx_k_test[] = "test";
 static char __pyx_k_word[] = "word";
-static char __pyx_k_0_5_7[] = "0.5.7";
+static char __pyx_k_0_5_8[] = "0.5.8";
 static char __pyx_k_Error[] = "Error";
 static char __pyx_k_dword[] = "dword";
 static char __pyx_k_enter[] = "__enter__";
@@ -1080,7 +1080,7 @@ static char __pyx_k_Error_while_reading_a_string_at[] = "Error while reading a s
 static char __pyx_k_Error_while_reading_a_byte_at_ad[] = "Error while reading a byte at address 0x%x";
 static char __pyx_k_Error_while_reading_a_dword_at_a[] = "Error while reading a dword at address 0x%x";
 static char __pyx_k_Error_while_reading_a_word_at_ad[] = "Error while reading a word at address 0x%x";
-static PyObject *__pyx_kp_s_0_5_7;
+static PyObject *__pyx_kp_s_0_5_8;
 static PyObject *__pyx_kp_s_Downloading_s_s;
 static PyObject *__pyx_n_s_EMU_REGS;
 static PyObject *__pyx_kp_s_Emulator_environment_error;
@@ -11071,7 +11071,7 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_s_0_5_7, __pyx_k_0_5_7, sizeof(__pyx_k_0_5_7), 0, 0, 1, 0},
+  {&__pyx_kp_s_0_5_8, __pyx_k_0_5_8, sizeof(__pyx_k_0_5_8), 0, 0, 1, 0},
   {&__pyx_kp_s_Downloading_s_s, __pyx_k_Downloading_s_s, sizeof(__pyx_k_Downloading_s_s), 0, 0, 1, 0},
   {&__pyx_n_s_EMU_REGS, __pyx_k_EMU_REGS, sizeof(__pyx_k_EMU_REGS), 0, 0, 1, 1},
   {&__pyx_kp_s_Emulator_environment_error, __pyx_k_Emulator_environment_error, sizeof(__pyx_k_Emulator_environment_error), 0, 0, 1, 0},
@@ -11763,14 +11763,14 @@ PyMODINIT_FUNC PyInit_pylibemu(void)
   /* "pylibemu.pyx":22
  * cimport pylibemu
  * 
- * __version__ = '0.5.7'             # <<<<<<<<<<<<<<
+ * __version__ = '0.5.8'             # <<<<<<<<<<<<<<
  * 
  * import sys
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version, __pyx_kp_s_0_5_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version, __pyx_kp_s_0_5_8) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 22; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "pylibemu.pyx":24
- * __version__ = '0.5.7'
+ * __version__ = '0.5.8'
  * 
  * import sys             # <<<<<<<<<<<<<<
  * import socket
