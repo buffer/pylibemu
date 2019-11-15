@@ -17,6 +17,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 # MA  02111-1307  USA
 
+#cython: language_level=3
+
 cimport pylibemu
 
 __version__ = '0.5.8'
@@ -561,7 +563,7 @@ cdef class Emulator:
         _mem = emu_memory_get(self._emu)
         _env = emu_env_new(self._emu)
         if _env is NULL:
-            print emu_strerror(self._emu)
+            print(emu_strerror(self._emu))
             return -1
 
         _env.profile = emu_profile_new()
@@ -1229,7 +1231,7 @@ cdef class Emulator:
 
         _env = emu_env_new(self._emu)
         if _env is NULL:
-            print emu_strerror(self._emu)
+            print(emu_strerror(self._emu))
             raise RuntimeError('Emulator environment error')
 
         if emu_env_w32_eip_check(_env) is NULL:
