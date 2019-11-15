@@ -249,7 +249,7 @@ cdef class EmuProfile:
         if is_struct:
             snprintf(self.s,
                      S_SIZE,
-                     "%s struct %s %s = 0x%08x => \n",
+                     "%s struct %s %s = 0x%p => \n",
                      self.sep[indent],
                      argument.argtype,
                      argument.argname,
@@ -257,7 +257,7 @@ cdef class EmuProfile:
         else:
             snprintf(self.s,
                      S_SIZE,
-                     "%s %s = 0x%08x => \n",
+                     "%s %s = 0x%p => \n",
                      self.sep[indent],
                      argument.argtype,
                      argument.argname,
@@ -321,7 +321,7 @@ cdef class EmuProfile:
     cdef emu_profile_function_render_ptr(self, void* ptr):
         snprintf(self.s,
                  S_SIZE,
-                 " = 0x%08x;\n",
+                 " = 0x%p;\n",
                  ptr)
 
         self.concatenate(self.output, self.s, self.output_size)
