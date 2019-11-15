@@ -1567,6 +1567,7 @@ static const char __pyx_k_x[] = "x";
 static const char __pyx_k__2[] = ")";
 static const char __pyx_k__6[] = "\n";
 static const char __pyx_k_wb[] = "wb";
+static const char __pyx_k_0_6[] = "0.6";
 static const char __pyx_k__12[] = "*";
 static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_eax[] = "eax";
@@ -1596,7 +1597,6 @@ static const char __pyx_k_open[] = "open";
 static const char __pyx_k_read[] = "read";
 static const char __pyx_k_test[] = "test";
 static const char __pyx_k_word[] = "word";
-static const char __pyx_k_0_5_8[] = "0.5.8";
 static const char __pyx_k_Error[] = "Error";
 static const char __pyx_k_dword[] = "dword";
 static const char __pyx_k_enter[] = "__enter__";
@@ -1667,7 +1667,7 @@ static const char __pyx_k_Error_while_reading_a_dword_at_a[] = "Error while read
 static const char __pyx_k_Error_while_reading_a_word_at_ad[] = "Error while reading a word at address 0x";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static PyObject *__pyx_kp_u_;
-static PyObject *__pyx_kp_u_0_5_8;
+static PyObject *__pyx_kp_u_0_6;
 static PyObject *__pyx_kp_u_Downloading;
 static PyObject *__pyx_n_s_EMU_REGS;
 static PyObject *__pyx_n_s_EmuProfile;
@@ -11753,7 +11753,7 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_, __pyx_k_, sizeof(__pyx_k_), 0, 1, 0, 0},
-  {&__pyx_kp_u_0_5_8, __pyx_k_0_5_8, sizeof(__pyx_k_0_5_8), 0, 1, 0, 0},
+  {&__pyx_kp_u_0_6, __pyx_k_0_6, sizeof(__pyx_k_0_6), 0, 1, 0, 0},
   {&__pyx_kp_u_Downloading, __pyx_k_Downloading, sizeof(__pyx_k_Downloading), 0, 1, 0, 0},
   {&__pyx_n_s_EMU_REGS, __pyx_k_EMU_REGS, sizeof(__pyx_k_EMU_REGS), 0, 0, 1, 1},
   {&__pyx_n_s_EmuProfile, __pyx_k_EmuProfile, sizeof(__pyx_k_EmuProfile), 0, 0, 1, 1},
@@ -12330,14 +12330,14 @@ if (!__Pyx_RefNanny) {
   /* "pylibemu.pyx":24
  * cimport pylibemu
  * 
- * __version__ = '0.5.8'             # <<<<<<<<<<<<<<
+ * __version__ = '0.6'             # <<<<<<<<<<<<<<
  * 
  * import sys
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version, __pyx_kp_u_0_5_8) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version, __pyx_kp_u_0_6) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
 
   /* "pylibemu.pyx":26
- * __version__ = '0.5.8'
+ * __version__ = '0.6'
  * 
  * import sys             # <<<<<<<<<<<<<<
  * import socket
