@@ -1,6 +1,6 @@
 # pylibemu.pxd
 #
-# Copyright(c) 2011-2016 Angelo Dell'Aera <buffer@antifork.org>
+# Copyright(c) 2011-2019 Angelo Dell'Aera <buffer@antifork.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -16,6 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 # MA  02111-1307  USA
 
+#cython: language_level=3
 
 from libc.stdint cimport int16_t, int32_t, uint8_t, uint16_t, uint32_t
 cimport cpython

@@ -1,6 +1,6 @@
 
 Pylibemu  |travis badge| |landscape badge| |downloads badge| |version badge|
-=======================
+============================================================================
 
 .. |travis badge| image:: https://img.shields.io/travis/buffer/pylibemu/master.svg
    :target: https://travis-ci.org/buffer/pylibemu
@@ -14,28 +14,49 @@ Pylibemu  |travis badge| |landscape badge| |downloads badge| |version badge|
 
 Pylibemu is a wrapper for the Libemu library (https://github.com/buffer/libemu).
 
+
 Requirements
 ============
 
-- Python 2.5 or later
+- Python 2.5+ or Python 3.6+ (read installation notes)
 - Libemu
 
 
-Installation
-============
+Installation (Python 3)
+=======================
+
+Pylibemu > 0.5.8 does not include Libemu submodule anymore so you are required to
+install Libemu before installing Pylibemu.
+
+To install Libemu, just execute:
+
+.. code-block:: console
+
+    $ git clone https://github.com/buffer/libemu.git
+    $ cd libemu
+    $ autoreconf -v -i
+    $ ./configure
+    $ make
+    $ sudo make install
+
+Once Libemu is correctly installed, just execute:
+
+.. code-block:: console
+
+    $ sudo pip install pylibemu
+
+
+Installation (Python 2)
+=======================
+
+Pylibemu 0.5.8 is the last version supporting Python 2.
 
 To install Pylibemu, just execute:
 
 .. code-block:: console
 
-	$ sudo pip install pylibemu
+	$ sudo pip install pylibemu==0.5.8
 
-or alternatively
-
-.. code-block:: console
-
-	$ git clone --recursive https://github.com/buffer/pylibemu.git
-	$ sudo python setup.py install
 
 Usage
 =====
@@ -181,6 +202,6 @@ method and subsequently run the shellcode emulation test again as shown above.
 License information
 ===================
 
-Copyright (C) 2011-2016 Angelo Dell'Aera <buffer@antifork.org>
+Copyright (C) 2011-2019 Angelo Dell'Aera <buffer@antifork.org>
 
 License: GNU General Public License, version 2

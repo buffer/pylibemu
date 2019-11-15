@@ -1,7 +1,7 @@
 #
 # pylibemu.pyx
 #
-# Copyright(c) 2011-2016 Angelo Dell'Aera <buffer@antifork.org>
+# Copyright(c) 2011-2019 Angelo Dell'Aera <buffer@antifork.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -17,9 +17,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 # MA  02111-1307  USA
 
+#cython: language_level=3
+
 cimport pylibemu
 
-__version__ = '0.5.8'
+__version__ = '0.6'
 
 import sys
 import socket
@@ -247,7 +249,7 @@ cdef class EmuProfile:
         if is_struct:
             snprintf(self.s,
                      S_SIZE,
-                     "%s struct %s %s = 0x%08x => \n",
+                     "%s struct %s %s = 0x%p => \n",
                      self.sep[indent],
                      argument.argtype,
                      argument.argname,
@@ -255,7 +257,7 @@ cdef class EmuProfile:
         else:
             snprintf(self.s,
                      S_SIZE,
-                     "%s %s = 0x%08x => \n",
+                     "%s %s = 0x%p => \n",
                      self.sep[indent],
                      argument.argtype,
                      argument.argname,
@@ -319,7 +321,7 @@ cdef class EmuProfile:
     cdef emu_profile_function_render_ptr(self, void* ptr):
         snprintf(self.s,
                  S_SIZE,
-                 " = 0x%08x;\n",
+                 " = 0x%p;\n",
                  ptr)
 
         self.concatenate(self.output, self.s, self.output_size)
@@ -561,7 +563,7 @@ cdef class Emulator:
         _mem = emu_memory_get(self._emu)
         _env = emu_env_new(self._emu)
         if _env is NULL:
-            print emu_strerror(self._emu)
+            print(emu_strerror(self._emu))
             return -1
 
         _env.profile = emu_profile_new()
@@ -1229,7 +1231,7 @@ cdef class Emulator:
 
         _env = emu_env_new(self._emu)
         if _env is NULL:
-            print emu_strerror(self._emu)
+            print(emu_strerror(self._emu))
             raise RuntimeError('Emulator environment error')
 
         if emu_env_w32_eip_check(_env) is NULL:
