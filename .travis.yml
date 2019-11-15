@@ -13,6 +13,7 @@ before_install:
   - autoreconf -v -i
   - ./configure
   - sudo make install
+  - cd -
 install:
   - sudo python setup.py install
 script:
