@@ -332,10 +332,5 @@ cdef extern from "emu/environment/win32/emu_env_w32.h":
                                             void        *userdata)
 
 
-
 cdef extern from "emu/emu_shellcode.h":
     int32_t emu_shellcode_test(c_emu *e, uint8_t *data, uint16_t size)
-
-
-
-
