@@ -874,7 +874,7 @@ struct __pyx_obj_8pylibemu_EmuProfile {
   char *t;
   char *s;
   int truncate;
-  int output_size;
+  unsigned long output_size;
 };
 
 
@@ -907,7 +907,7 @@ struct __pyx_obj_8pylibemu_Emulator {
 
 struct __pyx_vtabstruct_8pylibemu_EmuProfile {
   PyObject *(*check_memalloc)(struct __pyx_obj_8pylibemu_EmuProfile *);
-  PyObject *(*concatenate)(struct __pyx_obj_8pylibemu_EmuProfile *, char *, char *, int);
+  PyObject *(*concatenate)(struct __pyx_obj_8pylibemu_EmuProfile *, char *, char *, unsigned long);
   PyObject *(*build_sep)(struct __pyx_obj_8pylibemu_EmuProfile *);
   PyObject *(*log_function_header)(struct __pyx_obj_8pylibemu_EmuProfile *, struct emu_profile_function *);
   PyObject *(*log_bracket_closed)(struct __pyx_obj_8pylibemu_EmuProfile *);
@@ -1435,7 +1435,7 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 static PyObject *__pyx_f_8pylibemu_10EmuProfile_check_memalloc(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self); /* proto*/
-static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self, char *__pyx_v_dst, char *__pyx_v_src, int __pyx_v_n); /* proto*/
+static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self, char *__pyx_v_dst, char *__pyx_v_src, unsigned long __pyx_v_n); /* proto*/
 static PyObject *__pyx_f_8pylibemu_10EmuProfile_build_sep(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self); /* proto*/
 static PyObject *__pyx_f_8pylibemu_10EmuProfile_log_function_header(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self, struct emu_profile_function *__pyx_v_function); /* proto*/
 static PyObject *__pyx_f_8pylibemu_10EmuProfile_log_bracket_closed(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self); /* proto*/
@@ -2567,7 +2567,7 @@ static uint32_t __pyx_f_8pylibemu_URLDownloadToFile(CYTHON_UNUSED struct emu_env
 }
 
 /* "pylibemu.pyx":114
- *     cdef int  output_size
+ *     cdef unsigned long output_size
  * 
  *     def __cinit__(self, size_t output_size):             # <<<<<<<<<<<<<<
  *         self.truncate    = False
@@ -2707,7 +2707,7 @@ static int __pyx_pf_8pylibemu_10EmuProfile___cinit__(struct __pyx_obj_8pylibemu_
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "pylibemu.pyx":114
- *     cdef int  output_size
+ *     cdef unsigned long output_size
  * 
  *     def __cinit__(self, size_t output_size):             # <<<<<<<<<<<<<<
  *         self.truncate    = False
@@ -2796,7 +2796,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_check_memalloc(struct __pyx_obj_
  *             logging.warning("Memory allocation error")
  *             sys._exit(-1)             # <<<<<<<<<<<<<<
  * 
- *     cdef concatenate(self, char *dst, char *src, int n):
+ *     cdef concatenate(self, char *dst, char *src, unsigned long n):
  */
     __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sys); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 129, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
@@ -2855,12 +2855,12 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_check_memalloc(struct __pyx_obj_
 /* "pylibemu.pyx":131
  *             sys._exit(-1)
  * 
- *     cdef concatenate(self, char *dst, char *src, int n):             # <<<<<<<<<<<<<<
+ *     cdef concatenate(self, char *dst, char *src, unsigned long n):             # <<<<<<<<<<<<<<
  *         if self.truncate:
  *             return
  */
 
-static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self, char *__pyx_v_dst, char *__pyx_v_src, int __pyx_v_n) {
+static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8pylibemu_EmuProfile *__pyx_v_self, char *__pyx_v_dst, char *__pyx_v_src, unsigned long __pyx_v_n) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -2870,7 +2870,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8py
 
   /* "pylibemu.pyx":132
  * 
- *     cdef concatenate(self, char *dst, char *src, int n):
+ *     cdef concatenate(self, char *dst, char *src, unsigned long n):
  *         if self.truncate:             # <<<<<<<<<<<<<<
  *             return
  * 
@@ -2879,7 +2879,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8py
   if (__pyx_t_1) {
 
     /* "pylibemu.pyx":133
- *     cdef concatenate(self, char *dst, char *src, int n):
+ *     cdef concatenate(self, char *dst, char *src, unsigned long n):
  *         if self.truncate:
  *             return             # <<<<<<<<<<<<<<
  * 
@@ -2891,7 +2891,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8py
 
     /* "pylibemu.pyx":132
  * 
- *     cdef concatenate(self, char *dst, char *src, int n):
+ *     cdef concatenate(self, char *dst, char *src, unsigned long n):
  *         if self.truncate:             # <<<<<<<<<<<<<<
  *             return
  * 
@@ -2951,7 +2951,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_concatenate(struct __pyx_obj_8py
   /* "pylibemu.pyx":131
  *             sys._exit(-1)
  * 
- *     cdef concatenate(self, char *dst, char *src, int n):             # <<<<<<<<<<<<<<
+ *     cdef concatenate(self, char *dst, char *src, unsigned long n):             # <<<<<<<<<<<<<<
  *         if self.truncate:
  *             return
  */
@@ -3079,7 +3079,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_build_sep(struct __pyx_obj_8pyli
  *                 logging.warning("Memory allocation error")
  *                 sys._exit(-1)             # <<<<<<<<<<<<<<
  * 
- *             memset(t, 0, sizeof(t))
+ *             memset(t, 0, sizeof(char) * max_len)
  */
       __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_sys); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 155, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
@@ -3115,14 +3115,14 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_build_sep(struct __pyx_obj_8pyli
     /* "pylibemu.pyx":157
  *                 sys._exit(-1)
  * 
- *             memset(t, 0, sizeof(t))             # <<<<<<<<<<<<<<
+ *             memset(t, 0, sizeof(char) * max_len)             # <<<<<<<<<<<<<<
  * 
  *             while counter:
  */
-    (void)(memset(__pyx_v_t, 0, (sizeof(__pyx_v_t))));
+    (void)(memset(__pyx_v_t, 0, ((sizeof(char)) * __pyx_v_max_len)));
 
     /* "pylibemu.pyx":159
- *             memset(t, 0, sizeof(t))
+ *             memset(t, 0, sizeof(char) * max_len)
  * 
  *             while counter:             # <<<<<<<<<<<<<<
  *                 self.concatenate(t, ssep, max_len)
@@ -3712,9 +3712,9 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_emu_profile_argument_render_ptr(
  *         if is_struct:
  *             snprintf(self.s,             # <<<<<<<<<<<<<<
  *                      S_SIZE,
- *                      "%s struct %s %s = 0x%p => \n",
+ *                      "%s struct %s %s = 0x%x => \n",
  */
-    (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s struct %s %s = 0x%p => \n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tptr.addr));
+    (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s struct %s %s = 0x%x => \n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tptr.addr));
 
     /* "pylibemu.pyx":249
  * 
@@ -3731,7 +3731,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_emu_profile_argument_render_ptr(
  *         else:
  *             snprintf(self.s,             # <<<<<<<<<<<<<<
  *                      S_SIZE,
- *                      "%s %s = 0x%p => \n",
+ *                      "%s %s %s = 0x%x => \n",
  */
   /*else*/ {
 
@@ -3742,7 +3742,7 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_emu_profile_argument_render_ptr(
  * 
  *         self.concatenate(self.output, self.s, self.output_size)
  */
-    (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s %s = 0x%p => \n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tptr.addr));
+    (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s %s %s = 0x%x => \n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tptr.addr));
   }
   __pyx_L3:;
 
@@ -3817,9 +3817,9 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_emu_profile_argument_render_ip(s
  * 
  *         snprintf(self.s,             # <<<<<<<<<<<<<<
  *                  S_SIZE,
- *                  "%s %s %s = %i (host=%s);\n",
+ *                  "%s %s %s = %i (host = %s);\n",
  */
-  (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s %s %s = %i (host=%s);\n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tint, __pyx_v_host));
+  (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s %s %s = %i (host = %s);\n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tint, __pyx_v_host));
 
   /* "pylibemu.pyx":284
  *                  host)
@@ -3882,9 +3882,9 @@ static PyObject *__pyx_f_8pylibemu_10EmuProfile_emu_profile_argument_render_port
  * 
  *         snprintf(self.s,             # <<<<<<<<<<<<<<
  *                  S_SIZE,
- *                  "%s %s %s = %i (port=%i);\n",
+ *                  "%s %s %s = %i (port = %i);\n",
  */
-  (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s %s %s = %i (port=%i);\n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tint, __pyx_v_port));
+  (void)(snprintf(__pyx_v_self->s, 0x1000, ((char *)"%s %s %s = %i (port = %i);\n"), (__pyx_v_self->sep[__pyx_v_indent]), __pyx_v_argument->argtype, __pyx_v_argument->argname, __pyx_v_argument->value.tint, __pyx_v_port));
 
   /* "pylibemu.pyx":300
  *                  port)
@@ -12019,7 +12019,7 @@ static int __Pyx_modinit_type_init_code(void) {
   /*--- Type init code ---*/
   __pyx_vtabptr_8pylibemu_EmuProfile = &__pyx_vtable_8pylibemu_EmuProfile;
   __pyx_vtable_8pylibemu_EmuProfile.check_memalloc = (PyObject *(*)(struct __pyx_obj_8pylibemu_EmuProfile *))__pyx_f_8pylibemu_10EmuProfile_check_memalloc;
-  __pyx_vtable_8pylibemu_EmuProfile.concatenate = (PyObject *(*)(struct __pyx_obj_8pylibemu_EmuProfile *, char *, char *, int))__pyx_f_8pylibemu_10EmuProfile_concatenate;
+  __pyx_vtable_8pylibemu_EmuProfile.concatenate = (PyObject *(*)(struct __pyx_obj_8pylibemu_EmuProfile *, char *, char *, unsigned long))__pyx_f_8pylibemu_10EmuProfile_concatenate;
   __pyx_vtable_8pylibemu_EmuProfile.build_sep = (PyObject *(*)(struct __pyx_obj_8pylibemu_EmuProfile *))__pyx_f_8pylibemu_10EmuProfile_build_sep;
   __pyx_vtable_8pylibemu_EmuProfile.log_function_header = (PyObject *(*)(struct __pyx_obj_8pylibemu_EmuProfile *, struct emu_profile_function *))__pyx_f_8pylibemu_10EmuProfile_log_function_header;
   __pyx_vtable_8pylibemu_EmuProfile.log_bracket_closed = (PyObject *(*)(struct __pyx_obj_8pylibemu_EmuProfile *))__pyx_f_8pylibemu_10EmuProfile_log_bracket_closed;
@@ -12481,7 +12481,7 @@ if (!__Pyx_RefNanny) {
  * import hashlib
  * import logging             # <<<<<<<<<<<<<<
  * 
- * logging.basicConfig(format = '%(asctime)s %(message)s', datefmt='[%Y-%m-%d %H:%M:%S]')
+ * logging.basicConfig(format = '%(asctime)s %(message)s', datefmt = '[%Y-%m-%d %H:%M:%S]')
  */
   __pyx_t_7 = __Pyx_Import(__pyx_n_s_logging, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
@@ -12491,7 +12491,7 @@ if (!__Pyx_RefNanny) {
   /* "pylibemu.pyx":37
  * import logging
  * 
- * logging.basicConfig(format = '%(asctime)s %(message)s', datefmt='[%Y-%m-%d %H:%M:%S]')             # <<<<<<<<<<<<<<
+ * logging.basicConfig(format = '%(asctime)s %(message)s', datefmt = '[%Y-%m-%d %H:%M:%S]')             # <<<<<<<<<<<<<<
  * 
  * # export register numbers
  */
