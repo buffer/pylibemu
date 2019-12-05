@@ -34,7 +34,7 @@ except ImportError:
 import hashlib
 import logging
 
-logging.basicConfig(format = '%(asctime)s %(message)s', datefmt='[%Y-%m-%d %H:%M:%S]')
+logging.basicConfig(format = '%(asctime)s %(message)s', datefmt = '[%Y-%m-%d %H:%M:%S]')
 
 # export register numbers
 class EMU_REGS:
@@ -109,7 +109,7 @@ cdef class EmuProfile:
     cdef char *t
     cdef char *s
     cdef bint truncate
-    cdef int  output_size
+    cdef unsigned long output_size
 
     def __cinit__(self, size_t output_size):
         self.truncate    = False
@@ -128,7 +128,7 @@ cdef class EmuProfile:
             logging.warning("Memory allocation error")
             sys._exit(-1)
 
-    cdef concatenate(self, char *dst, char *src, int n):
+    cdef concatenate(self, char *dst, char *src, unsigned long n):
         if self.truncate:
             return
 
@@ -154,7 +154,7 @@ cdef class EmuProfile:
                 logging.warning("Memory allocation error")
                 sys._exit(-1)
 
-            memset(t, 0, sizeof(t))
+            memset(t, 0, sizeof(char) * max_len)
 
             while counter:
                 self.concatenate(t, ssep, max_len)
@@ -249,7 +249,7 @@ cdef class EmuProfile:
         if is_struct:
             snprintf(self.s,
                      S_SIZE,
-                     "%s struct %s %s = 0x%p => \n",
+                     "%s struct %s %s = 0x%x => \n",
                      self.sep[indent],
                      argument.argtype,
                      argument.argname,
@@ -257,7 +257,7 @@ cdef class EmuProfile:
         else:
             snprintf(self.s,
                      S_SIZE,
-                     "%s %s = 0x%p => \n",
+                     "%s %s %s = 0x%x => \n",
                      self.sep[indent],
                      argument.argtype,
                      argument.argname,
@@ -274,7 +274,7 @@ cdef class EmuProfile:
 
         snprintf(self.s,
                  S_SIZE,
-                 "%s %s %s = %i (host=%s);\n",
+                 "%s %s %s = %i (host = %s);\n",
                  self.sep[indent],
                  argument.argtype,
                  argument.argname,
@@ -290,7 +290,7 @@ cdef class EmuProfile:
 
         snprintf(self.s,
                  S_SIZE,
-                 "%s %s %s = %i (port=%i);\n",
+                 "%s %s %s = %i (port = %i);\n",
                  self.sep[indent],
                  argument.argtype,
                  argument.argname,
