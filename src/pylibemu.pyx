@@ -1,7 +1,7 @@
 #
 # pylibemu.pyx
 #
-# Copyright(c) 2011-2019 Angelo Dell'Aera <buffer@antifork.org>
+# Copyright(c) 2011-2022 Angelo Dell'Aera <buffer@antifork.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -21,7 +21,7 @@
 
 cimport pylibemu
 
-__version__ = '0.6'
+__version__ = '0.7'
 
 import sys
 import socket

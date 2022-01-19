@@ -1,6 +1,6 @@
-from distutils.core import setup
-from distutils.extension import Extension
-from distutils.command.build_clib import build_clib
+from setuptools import setup
+from setuptools.extension import Extension
+from setuptools.command.build_clib import build_clib
 
 try:
     from Cython.Distutils import build_ext
@@ -18,7 +18,7 @@ cmdclass    = {'build_clib' : build_clib}
 setup(
     name             = "pylibemu",
     packages         = [],
-    version          = "0.6.1",
+    version          = "0.7",
     description      = "Libemu Python wrapper",
     url              = "https://github.com/buffer/pylibemu",
     author           = "Angelo Dell'Aera",
