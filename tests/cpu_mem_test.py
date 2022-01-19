@@ -68,55 +68,55 @@ emulator = pylibemu.Emulator()
 offset   = emulator.shellcode_getpc_test(shellcode)
 
 for i in range(0, 7):
-    log.warn("%s => %s"  % (regs32[i], hex(emulator.cpu_reg32_get(i)), ))
-    log.warn("%s  => %s" % (regs16[i], hex(emulator.cpu_reg16_get(i)), ))
-    log.warn("%s  => %s" % (regs8[i] , hex(emulator.cpu_reg8_get(i)) , ))
+    log.warning("%s => %s"  % (regs32[i], hex(emulator.cpu_reg32_get(i)), ))
+    log.warning("%s  => %s" % (regs16[i], hex(emulator.cpu_reg16_get(i)), ))
+    log.warning("%s  => %s" % (regs8[i] , hex(emulator.cpu_reg8_get(i)) , ))
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 emulator.memory_write_dword(emulator.cpu_reg32_get(i), 0x41424344)
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 dword = emulator.memory_read_dword(emulator.cpu_reg32_get(i))
 assert dword == 0x41424344
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 word = emulator.memory_read_word(emulator.cpu_reg32_get(i))
 assert word == 0x4344
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 byte = emulator.memory_read_byte(emulator.cpu_reg32_get(i))
 assert byte == 0x44
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 emulator.memory_segment_select(5)
 assert emulator.memory_segment_get() == 5
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 eip = emulator.cpu_eip_get()
-log.warn(hex(eip))
+log.warning(hex(eip))
 
 dword = emulator.memory_read_dword(eip)
-log.warn(hex(dword))
+log.warning(hex(dword))
 
 word = emulator.memory_read_word(eip)
-log.warn(hex(word))
+log.warning(hex(word))
 
 byte = emulator.memory_read_byte(eip)
-log.warn(hex(byte))
+log.warning(hex(byte))
 
 block = emulator.memory_read_block(eip, 4)
-#log.warn('0x' + ''.join(["%02x" % ord(x) for x in block[::-1]]))
+#log.warning('0x' + ''.join(["%02x" % ord(x) for x in block[::-1]]))
 
-log.warn(emulator.cpu_get_current_instruction().decode('utf-8'))
+log.warning(emulator.cpu_get_current_instruction().decode('utf-8'))
 
 emulator.memory_write_dword(emulator.cpu_reg32_get(i), 0x00414243)
 s = emulator.memory_read_string(emulator.cpu_reg32_get(i), 4)
-log.warn(s.decode('utf-8'))
+log.warning(s.decode('utf-8'))
 
-log.warn(emulator.env_w32_hook_check())
+log.warning(emulator.env_w32_hook_check())
