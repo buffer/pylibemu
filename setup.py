@@ -1,6 +1,6 @@
-from distutils.core import setup
-from distutils.extension import Extension
-from distutils.command.build_clib import build_clib
+from setuptools import setup
+from setuptools.extension import Extension
+from setuptools.command.build_clib import build_clib
 
 try:
     from Cython.Distutils import build_ext
