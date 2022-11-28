@@ -8,6 +8,7 @@ python:
   - "3.7"
   - "3.8"
   - "3.9"
+  - "3.10"
 before_install:
   - git clone https://github.com/buffer/libemu.git
   - cd libemu
