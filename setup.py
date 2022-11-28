@@ -18,7 +18,7 @@ cmdclass    = {'build_clib' : build_clib}
 setup(
     name             = "pylibemu",
     packages         = [],
-    version          = "0.7",
+    version          = "0.8",
     description      = "Libemu Python wrapper",
     url              = "https://github.com/buffer/pylibemu",
     author           = "Angelo Dell'Aera",
