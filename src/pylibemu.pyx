@@ -24,7 +24,6 @@ cimport pylibemu
 __version__ = '0.7'
 
 import sys
-import socket
 
 try:
     import urllib.request as urllib2
@@ -36,6 +35,7 @@ import logging
 
 logging.basicConfig(format = '%(asctime)s %(message)s', datefmt = '[%Y-%m-%d %H:%M:%S]')
 
+
 # export register numbers
 class EMU_REGS:
     eax = 0
@@ -46,6 +46,7 @@ class EMU_REGS:
     ebp = 5
     esi = 6
     edi = 7
+
 
 # User hooks
 cdef uint32_t ExitProcess(c_emu_env *env, c_emu_env_hook *hook...):
@@ -68,28 +69,30 @@ cdef uint32_t ExitThread(c_emu_env *env, c_emu_env_hook *hook...):
 
 cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     cdef va_list args
-    cdef void   *pCaller
-    cdef char   *szURL
-    cdef char   *szFileName
-    cdef int     dwReserved
-    cdef void   *lpfnCB
-    cdef void   *p
+    cdef void *pCaller
+    cdef char *szURL
+    cdef char *szFileName
+    cdef int dwReserved
+    cdef void *lpfnCB
+    cdef void *p
 
     va_start(args, <void*>hook)
-    pCaller    = <void *>va_arg(args, void_ptr_type)
-    szURL      = <char *>va_arg(args, char_ptr_type)
+    pCaller = <void *>va_arg(args, void_ptr_type)
+    szURL = <char *>va_arg(args, char_ptr_type)
     szFileName = <char *>va_arg(args, char_ptr_type)
     dwReserved = <int>va_arg(args, int_type)
-    lpfnCB     = <void *>va_arg(args, void_ptr_type)
+    lpfnCB = <void *>va_arg(args, void_ptr_type)
     va_end(args)
 
-    logging.warning("Downloading %s (%s)" % (szURL.decode('utf-8'), szFileName.decode('utf-8')))
+    logging.warning("Downloading %s (%s)" % (szURL.decode('utf-8'),
+                                             szFileName.decode('utf-8')))
+
     try:
-        url     = urllib2.urlopen(szURL.decode('utf-8'), timeout = 10)
+        url = urllib2.urlopen(szURL.decode('utf-8'), timeout = 10)
         content = url.read()
     except:
         logging.warning("Error while downloading from %s" % (szURL, ))
-        return 0x800C0008 # INET_E_DOWNLOAD_FAILURE
+        return 0x800C0008  # INET_E_DOWNLOAD_FAILURE
 
     m = hashlib.md5(content)
     with open(str(m.hexdigest()), mode = 'wb') as fd:
@@ -98,9 +101,9 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     return 0
 
 
-DEF OUTPUT_SIZE = 1024 * 1024 # 1MB
-DEF SEP_SIZE    = 16
-DEF S_SIZE      = 4096
+DEF OUTPUT_SIZE = 1024 * 1024  # 1MB
+DEF SEP_SIZE = 16
+DEF S_SIZE = 4096
 
 
 cdef class EmuProfile:
@@ -112,11 +115,11 @@ cdef class EmuProfile:
     cdef unsigned long output_size
 
     def __cinit__(self, size_t output_size):
-        self.truncate    = False
+        self.truncate = False
         self.output_size = output_size
 
         self.output = <char *>malloc(output_size)
-        self.s      = <char *>malloc(S_SIZE)
+        self.s = <char *>malloc(S_SIZE)
 
         self.check_memalloc()
         memset(self.output, 0, output_size)
@@ -267,7 +270,7 @@ cdef class EmuProfile:
 
     cdef emu_profile_argument_render_ip(self, c_emu_profile_argument *argument, int indent):
         cdef c_in_addr *addr
-        cdef char      *host
+        cdef char *host
 
         addr = <c_in_addr *>&argument.value.tint
         host = inet_ntoa(addr[0])
@@ -430,14 +433,14 @@ cdef class EmuProfile:
 
 
 cdef class Emulator:
-    cdef c_emu      *_emu
+    cdef c_emu *_emu
     cdef EmuProfile emu_profile
-    cdef int32_t    _offset
-    cdef size_t     output_size
-    cdef bint       enable_hooks
+    cdef int32_t _offset
+    cdef size_t output_size
+    cdef bint enable_hooks
 
     def __cinit__(self, output_size = OUTPUT_SIZE, enable_hooks = True):
-        self.output_size  = output_size
+        self.output_size = output_size
         self.enable_hooks = enable_hooks
         self.new()
 
@@ -450,7 +453,7 @@ cdef class Emulator:
             self._emu = NULL
 
     def new(self):
-        self._emu        = emu_new()
+        self._emu = emu_new()
         self.emu_profile = EmuProfile(self.output_size)
 
     def set_output_size(self, output_size):
@@ -478,7 +481,7 @@ cdef class Emulator:
             self.new()
 
         buffer = <char *>shellcode
-        sclen  = len(bytes(shellcode))
+        sclen = len(bytes(shellcode))
 
         if buffer is NULL:
             return -1
@@ -498,10 +501,10 @@ cdef class Emulator:
         @type   offset   : Integer
         @param  offset   : GetPC offset
         '''
-        cdef c_emu_cpu      *_cpu
-        cdef c_emu_memory   *_mem
-        cdef char           *scode
-        cdef int            j, static_offset
+        cdef c_emu_cpu *_cpu
+        cdef c_emu_memory *_mem
+        cdef char *scode
+        cdef int j, static_offset
 
         if self._emu is NULL:
             self.new()
@@ -538,7 +541,7 @@ cdef class Emulator:
         emu_cpu_reg32_set(emu_cpu_get(self._emu), esp, 0x0012fe98)
 
     cdef check_stop_emulation(self, c_emu_env_hook *hook):
-        return hook.hook.win.fnname.decode('utf-8') in ('ExitProcess', 'ExitThread', 'exit') 
+        return hook.hook.win.fnname.decode('utf-8') in ('ExitProcess', 'ExitThread', 'exit')
 
     cpdef int test(self, steps = 1000000):
         '''
@@ -548,12 +551,12 @@ cdef class Emulator:
         @type   steps:  Integer
         @param  steps:  Max number of steps to run
         '''
-        cdef c_emu_cpu      *_cpu
-        cdef c_emu_memory   *_mem
-        cdef c_emu_env      *_env
-        cdef uint32_t       eipsave
-        cdef int            j
-        cdef int            ret
+        cdef c_emu_cpu *_cpu
+        cdef c_emu_memory *_mem
+        cdef c_emu_env *_env
+        cdef uint32_t eipsave
+        cdef int j
+        cdef int ret
         cdef c_emu_env_hook *hook
 
         if self._emu is NULL:
@@ -582,7 +585,7 @@ cdef class Emulator:
             emu_env_w32_export_hook(_env, "URLDownloadToFileA", URLDownloadToFile,  NULL)
 
         eipsave = 0
-        ret     = 0
+        ret = 0
 
         for j in range(steps):
             if not _cpu.repeat_current_instr:
@@ -636,7 +639,7 @@ cdef class Emulator:
 
     # CPU methods
     def cpu_reg32_get(self, c_emu_reg32 reg):
-        ''' 
+        '''
         Method used to get the 32-bit value stored in a register
 
         @type   reg:  Integer
@@ -650,7 +653,7 @@ cdef class Emulator:
                         esi = 6
                         edi = 7
 
-        @rtype:     uint32_t 
+        @rtype:     uint32_t
         @return:    32-bit value stored in the register
 
         Raises RuntimeError if the Emulator is not initialized
@@ -664,7 +667,7 @@ cdef class Emulator:
         return <uint32_t>emu_cpu_reg32_get(_cpu, reg)
 
     def cpu_reg32_set(self, c_emu_reg32 reg, uint32_t val):
-        ''' 
+        '''
         Method used to set a register with a 32-bit value
 
         @type   reg:  Integer
@@ -692,7 +695,7 @@ cdef class Emulator:
         emu_cpu_reg32_set(_cpu, reg, val)
 
     def cpu_reg16_get(self, c_emu_reg16 reg):
-        ''' 
+        '''
         Method used to get the 16-bit value stored in a register
 
         @type   reg:  Integer
@@ -706,7 +709,7 @@ cdef class Emulator:
                         si = 6
                         di = 7
 
-        @rtype:     uint16_t 
+        @rtype:     uint16_t
         @return:    16-bit value stored in the register
 
         Raises RuntimeError if the Emulator is not initialized
@@ -720,7 +723,7 @@ cdef class Emulator:
         return <uint16_t>emu_cpu_reg16_get(_cpu, reg)
 
     def cpu_reg16_set(self, c_emu_reg16 reg, uint16_t val):
-        ''' 
+        '''
         Method used to set a register with a 16-bit value
 
         @type   reg:  Integer
@@ -748,7 +751,7 @@ cdef class Emulator:
         emu_cpu_reg16_set(_cpu, reg, val)
 
     def cpu_reg8_get(self, c_emu_reg8 reg):
-        ''' 
+        '''
         Method used to get the 8-bit value stored in a register
 
         @type   reg:  Integer
@@ -762,21 +765,21 @@ cdef class Emulator:
                         dh = 6
                         bh = 7
 
-        @rtype:     uint8_t 
+        @rtype:     uint8_t
         @return:    8-bit value stored in the register
 
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_cpu *_cpu
-    
+
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
-    
+
         _cpu = emu_cpu_get(self._emu)
         return <uint8_t>emu_cpu_reg8_get(_cpu, reg)
-    
+
     def cpu_reg8_set(self, c_emu_reg8 reg, uint8_t val):
-        ''' 
+        '''
         Method used to set a register with a 8-bit value
 
         @type   reg:  Integer
@@ -796,7 +799,7 @@ cdef class Emulator:
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_cpu *_cpu
-        
+
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
 
@@ -807,7 +810,7 @@ cdef class Emulator:
         '''
         Method used to get the 32-bit value stored in the register eflags
 
-        @rtype:     uint32_t 
+        @rtype:     uint32_t
         @return:    32-bit value stored in the register eflags
 
         Raises RuntimeError if the Emulator is not initialized
@@ -821,7 +824,7 @@ cdef class Emulator:
         return <uint32_t>emu_cpu_eflags_get(_cpu)
 
     def cpu_eflags_set(self, uint32_t val):
-        ''' 
+        '''
         Method used to set the register eflags with a 32-bit value
 
         @type   val:  uint32_t
@@ -838,7 +841,7 @@ cdef class Emulator:
         emu_cpu_eflags_set(_cpu, val)
 
     def cpu_eip_set(self, uint32_t eip):
-        ''' 
+        '''
         Method used to set the register eip with a 32-bit value
 
         @type   val:  uint32_t
@@ -858,7 +861,7 @@ cdef class Emulator:
         '''
         Method used to get the 32-bit value stored in the register eip
 
-        @rtype:     uint32_t 
+        @rtype:     uint32_t
         @return:    32-bit value stored in the register eip
 
         Raises RuntimeError if the Emulator is not initialized
@@ -872,7 +875,7 @@ cdef class Emulator:
         return <uint32_t>emu_cpu_eip_get(_cpu)
 
     def cpu_parse(self):
-        ''' 
+        '''
         Method used to parse an instruction at eip
 
         Raises RuntimeError if the Emulator is not initialized
@@ -881,12 +884,12 @@ cdef class Emulator:
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
-    
+
         _cpu = emu_cpu_get(self._emu)
         return <int32_t>emu_cpu_parse(_cpu)
 
     def cpu_step(self):
-        ''' 
+        '''
         Method used to step the last instruction
 
         Raises RuntimeError if the Emulator is not initialized
@@ -895,12 +898,12 @@ cdef class Emulator:
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
-        
+
         _cpu = emu_cpu_get(self._emu)
         return <int32_t>emu_cpu_step(_cpu)
 
     def cpu_debugflag_set(self, uint8_t flag):
-        ''' 
+        '''
         Method used to set a cpu debug flag
 
         @type   flag:  uint8_t
@@ -917,7 +920,7 @@ cdef class Emulator:
         emu_cpu_debugflag_set(_cpu, flag)
 
     def cpu_debugflag_unset(self, uint8_t flag):
-        ''' 
+        '''
         Method used to unset a cpu debug flag
 
         @type   flag:  uint8_t
@@ -936,10 +939,10 @@ cdef class Emulator:
     def cpu_get_current_instruction(self):
         '''
         Method used to disassemble the current instruction
-        
+
         @rtype  : string
         @return : disassembled current instruction
-        
+
         Raises RuntimeError if the Emulator is not initialized
         '''
         if self._emu is NULL:
@@ -994,7 +997,7 @@ cdef class Emulator:
         emu_memory_write_word(_mem, addr, word)
 
     def memory_write_dword(self, uint32_t addr, uint32_t dword):
-        ''' 
+        '''
         Method used to write a dword at a memory location
 
         @type   addr:  uint32_t
@@ -1014,7 +1017,7 @@ cdef class Emulator:
         emu_memory_write_dword(_mem, addr, dword)
 
     def memory_write_block(self, uint32_t addr, src, size_t _len):
-        ''' 
+        '''
         Method used to write a block at a memory location
 
         @type   addr:   uint32_t
@@ -1037,13 +1040,13 @@ cdef class Emulator:
         emu_memory_write_block(_mem, addr, <void *>src, _len)
 
     def memory_read_byte(self, uint32_t addr):
-        ''' 
+        '''
         Method used to read a byte at a memory location
 
         @type   addr:  uint32_t
         @param  addr:  memory location address
 
-        @rtype:     uint8_t 
+        @rtype:     uint8_t
         @return:    byte at memory location address
 
         Raises RuntimeError if the Emulator is not initialized
@@ -1061,13 +1064,13 @@ cdef class Emulator:
         return byte
 
     def memory_read_word(self, uint32_t addr):
-        ''' 
+        '''
         Method used to read a word at a memory location
 
         @type   addr:  uint32_t
         @param  addr:  memory location address
 
-        @rtype:     uint16_t 
+        @rtype:     uint16_t
         @return:    word at memory location address
 
         Raises RuntimeError if the Emulator is not initialized
@@ -1085,13 +1088,13 @@ cdef class Emulator:
         return word
 
     def memory_read_dword(self, uint32_t addr):
-        ''' 
+        '''
         Method used to read a dword at a memory location
 
         @type   addr:  uint32_t
         @param  addr:  memory location address
 
-        @rtype:     uint32_t 
+        @rtype:     uint32_t
         @return:    word at memory location address
 
         Raises RuntimeError if the Emulator is not initialized
@@ -1109,7 +1112,7 @@ cdef class Emulator:
         return dword
 
     def memory_read_block(self, uint32_t addr, size_t _len):
-        '''  
+        '''
         Method used to read a block at a memory location
 
         @type   addr:     uint32_t
@@ -1118,17 +1121,17 @@ cdef class Emulator:
         @type   _len:  size_t
         @param  _len:  block size
 
-        @rtype:     char * 
+        @rtype:     char *
         @return:    block at memory location address
 
         Raises RuntimeError if the Emulator is not initialized
         '''
         cdef c_emu_memory *_mem
-        cdef void         *block
+        cdef void *block
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
-        
+
         block = malloc(_len)
         if block is NULL:
             raise RuntimeError('Error while allocating memory')
@@ -1140,7 +1143,7 @@ cdef class Emulator:
         return <char *>block
 
     def memory_read_string(self, uint32_t addr, uint32_t maxsize):
-        ''' 
+        '''
         Method used to read a string at a memory location
 
         @type   addr:     uint32_t
@@ -1149,7 +1152,7 @@ cdef class Emulator:
         @type   maxsize:  uint32_t
         @param  maxsize:  string max size
 
-        @rtype:     char * 
+        @rtype:     char *
         @return:    string at memory location address
 
         Raises RuntimeError if the Emulator is not initialized
@@ -1167,17 +1170,17 @@ cdef class Emulator:
         return <char *>s.data
 
     def memory_segment_select(self, c_emu_segment segment):
-        '''  
+        '''
         Method used to select a segment
 
         @type   segment:    Integer
         @param  segment:    Segment index
-                                s_cs = 0 
-                                s_ss = 1 
-                                s_ds = 2 
-                                s_es = 3 
-                                s_fs = 4 
-                                s_gs = 5 
+                                s_cs = 0
+                                s_ss = 1
+                                s_ds = 2
+                                s_es = 3
+                                s_fs = 4
+                                s_gs = 5
 
         Raises RuntimeError if the Emulator is not initialized
         '''
@@ -1190,17 +1193,17 @@ cdef class Emulator:
         emu_memory_segment_select(_mem, segment)
 
     def memory_segment_get(self):
-        '''  
+        '''
         Method used to get the current segment
 
         @rtype   segment:     Integer
         @rparam  segment:     Segment index
-                                s_cs = 0 
-                                s_ss = 1 
-                                s_ds = 2 
-                                s_es = 3 
-                                s_fs = 4 
-                                s_gs = 5 
+                                s_cs = 0
+                                s_ss = 1
+                                s_ds = 2
+                                s_es = 3
+                                s_fs = 4
+                                s_gs = 5
 
         Raises RuntimeError if the Emulator is not initialized
         '''
@@ -1216,7 +1219,7 @@ cdef class Emulator:
     def env_w32_hook_check(self):
         '''
         Method used to check if a hooked Win32 API is at the
-        current eip 
+        current eip
 
         @rtype      boolean
         @rparam     True if a hooked Win32 API is at the current
@@ -1224,7 +1227,7 @@ cdef class Emulator:
 
         Raises RuntimeError if the Emulator is not initialized
         '''
-        cdef c_emu_env      *_env
+        cdef c_emu_env *_env
 
         if self._emu is NULL:
             raise RuntimeError('Emulator not initialized')
