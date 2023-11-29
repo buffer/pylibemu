@@ -1,15 +1,10 @@
 
-Pylibemu  |travis badge| |landscape badge| |downloads badge| |version badge|
+Pylibemu  |version badge| |downloads badge|
 ============================================================================
 
-.. |travis badge| image:: https://img.shields.io/travis/buffer/pylibemu/master.svg
-   :target: https://travis-ci.org/buffer/pylibemu
-.. |landscape badge| image:: https://landscape.io/github/buffer/pylibemu/master/landscape.png
-   :target: https://landscape.io/github/buffer/pylibemu/master
-   :alt: Code Health
-.. |downloads badge| image:: https://img.shields.io/pypi/dm/pylibemu.svg
-   :target: https://pypi.python.org/pypi/pylibemu/
 .. |version badge| image:: https://img.shields.io/pypi/v/pylibemu.svg
+   :target: https://pypi.python.org/pypi/pylibemu/
+.. |downloads badge| image:: https://img.shields.io/pypi/dm/pylibemu.svg
    :target: https://pypi.python.org/pypi/pylibemu/
 
 Pylibemu is a wrapper for the Libemu library (https://github.com/buffer/libemu).
@@ -202,6 +197,6 @@ method and subsequently run the shellcode emulation test again as shown above.
 License information
 ===================
 
-Copyright (C) 2011-2022 Angelo Dell'Aera <buffer@antifork.org>
+Copyright (C) 2011-2023 Angelo Dell'Aera <buffer@antifork.org>
 
 License: GNU General Public License, version 2
