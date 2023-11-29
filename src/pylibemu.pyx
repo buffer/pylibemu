@@ -49,39 +49,38 @@ class EMU_REGS:
 
 
 # User hooks
-cdef uint32_t ExitProcess(c_emu_env *env, c_emu_env_hook *hook...):
+cdef uint32_t ExitProcess(c_emu_env *env, c_emu_env_hook *hook...) noexcept:
     cdef va_list args
-    cdef int exitcode
+    cdef int _exitcode
 
     va_start(args, <void *>hook)
-    exitcode = <int>va_arg(args, int_type)
+    _exitcode = <int>va_arg(args, int_type)
     va_end(args)
     return 0
 
-cdef uint32_t ExitThread(c_emu_env *env, c_emu_env_hook *hook...):
+cdef uint32_t ExitThread(c_emu_env *env, c_emu_env_hook *hook...) noexcept:
     cdef va_list args
-    cdef int exitcode
+    cdef int _exitcode
 
     va_start(args, <void *>hook)
-    exitcode = <int>va_arg(args, int_type)
+    _exitcode = <int>va_arg(args, int_type)
     va_end(args)
     return 0
 
-cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
+cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...) noexcept:
     cdef va_list args
-    cdef void *pCaller
+    cdef void *_pCaller
     cdef char *szURL
     cdef char *szFileName
-    cdef int dwReserved
-    cdef void *lpfnCB
-    cdef void *p
+    cdef int _dwReserved
+    cdef void *_lpfnCB
 
     va_start(args, <void*>hook)
-    pCaller = <void *>va_arg(args, void_ptr_type)
+    _pCaller = <void *>va_arg(args, void_ptr_type)
     szURL = <char *>va_arg(args, char_ptr_type)
     szFileName = <char *>va_arg(args, char_ptr_type)
-    dwReserved = <int>va_arg(args, int_type)
-    lpfnCB = <void *>va_arg(args, void_ptr_type)
+    _dwReserved = <int>va_arg(args, int_type)
+    _lpfnCB = <void *>va_arg(args, void_ptr_type)
     va_end(args)
 
     logging.warning("Downloading %s (%s)" % (szURL.decode('utf-8'),
@@ -90,7 +89,7 @@ cdef uint32_t URLDownloadToFile(c_emu_env *env, c_emu_env_hook *hook...):
     try:
         url = urllib2.urlopen(szURL.decode('utf-8'), timeout = 10)
         content = url.read()
-    except:
+    except Exception:
         logging.warning("Error while downloading from %s" % (szURL, ))
         return 0x800C0008  # INET_E_DOWNLOAD_FAILURE
 
@@ -135,7 +134,7 @@ cdef class EmuProfile:
         if self.truncate:
             return
 
-        if len(dst) + len(src) > n - 1:
+        if <unsigned long>len(dst) + <unsigned long>len(src) > n - 1:
             self.truncate = True
             return
 
